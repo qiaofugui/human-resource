@@ -10,6 +10,9 @@ import Components from 'unplugin-vue-components/vite';
 //ant-design-vue
 import { AntDesignVueResolver } from "unplugin-vue-components/resolvers"
 
+// tailwindcss
+import tailwindcss from 'tailwindcss'
+import autoprefixer from 'autoprefixer'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -35,6 +38,12 @@ export default defineConfig({
       less: {
         javascriptEnabled: true
       }
+    },
+    postcss: {
+      plugins: [
+        tailwindcss(),
+        autoprefixer()
+      ]
     }
   },
 })
