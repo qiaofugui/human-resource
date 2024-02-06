@@ -46,4 +46,13 @@ export default defineConfig({
       ]
     }
   },
+  server: {
+    proxy: {
+      '/api': {
+        // target: 'http://ihrm.itheima.net',
+        target: 'http://heimahr.itheima.net',
+        changeOrigin: true
+      }
+    }
+  },
 })

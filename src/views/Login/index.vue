@@ -1,11 +1,78 @@
-<script setup></script>
+<script setup>
+import { useRouter } from 'vue-router'  // 引入方法
+import { login } from '@/api/login'
+import useToken from '@/stores/token'
+const router = useRouter() // 得到一个router实例
+
+const loginForm = reactive({
+  // 手机号、密码 、是否同意
+  mobile: '13800000002',
+  password: 'hm#qd@23!',
+  isAgree: false,
+})
+// 自定义校验规则 rule是当前的规则 value是当前的值
+const validatorAgree = (rule, value) => {
+  // 判断 value 是不是 true  如果不是 true 就报错
+  return value ? Promise.resolve() : Promise.reject(new Error('您必须同意用户协议'))
+}
+// 验证规则
+const rules = {
+  mobile: [
+    { required: true, message: '手机号不能为空', trigger: ['change', 'blur'] },
+    {
+      pattern: /^1[3-9]\d{9}$/,
+      message: '手机号格式不正确',
+      trigger: ['change', 'blur'],
+    },
+  ],
+  password: [
+    {
+      required: true,
+      message: '密码不能为空',
+      trigger: ['change', 'blur'],
+    },
+    {
+      pattern: /^.{6,}$/,
+      message: '密码长度必须大于6位',
+      trigger: ['change', 'blur'],
+    },
+  ],
+  isAgree: [
+    { validator: validatorAgree },
+  ],
+}
+// 提交表单
+const onFinish = async (values) => {
+  const { updateToken } = useToken()
+  // values 是校验表单的数据
+  const data = await login(values)
+  updateToken(data)  // 更新 pinia 里面的token
+  // 登录成功 要跳转到主页
+  router.push("/")
+};
+</script>
 
 <template>
   <div class="login-container">
     <div class="logo">BackGround</div>
     <div class="form">
       <h3>人力资源管理系统</h3>
-      <a-card class="login-card"> 登录表单 </a-card>
+      <a-card class="login-card">
+        <a-form :model="loginForm" :rules="rules" @finish="onFinish" autocomplete="off">
+          <a-form-item name="mobile">
+            <a-input size="large" v-model:value="loginForm.mobile"></a-input>
+          </a-form-item>
+          <a-form-item name="password">
+            <a-input-password size="large" v-model:value="loginForm.password"></a-input-password>
+          </a-form-item>
+          <a-form-item name="isAgree">
+            <a-checkbox v-model:checked="loginForm.isAgree">用户平台使用协议</a-checkbox>
+          </a-form-item>
+          <a-form-item>
+            <a-button size="large" type="primary" block htmlType="submit">登录</a-button>
+          </a-form-item>
+        </a-form>
+      </a-card>
     </div>
   </div>
 </template>
@@ -22,16 +89,18 @@
     align-items: center;
     background-color: rgba(111, 98, 242, 0.1);
   }
+
   .form {
     flex: 3;
     display: flex;
     flex-direction: column;
     justify-content: center;
+
     .ant-card {
-      width: 320px;
       border: none;
       padding: 0;
     }
+
     h3 {
       padding-left: 30px;
       font-size: 24px;
