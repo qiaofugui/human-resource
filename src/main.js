@@ -5,6 +5,8 @@ import App from './App.vue'
 import router from './router'
 import './styles/index.css'
 
+import '@/permission'
+
 // pinia 持久化插件
 import PluginState from 'pinia-plugin-persistedstate'
 

@@ -49,3 +49,7 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+
+#nprogress .bar {
+  background: #6226EE !important;
+}
