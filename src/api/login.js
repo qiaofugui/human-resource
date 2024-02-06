@@ -2,13 +2,22 @@
 // 接口地址
 // 请求工具
 import request from '@/utils/request'
-//提供方法
-export function login (data) {
+
+// 登录接口
+export function loginAPI (data) {
   // 要拿登录成功的数据
   return request({
     url: '/sys/login', // 请求地址
     method: 'post',
     data
     // 请求体参数 url参数 请求体参数 header body
+  })
+}
+
+// 用户信息
+export function getUserInfoAPI() {
+  return request({
+    url: '/sys/profile',
+    method: 'get'
   })
 }

@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router'  // 引入方法
-import { login } from '@/api/login'
+import { loginAPI } from '@/api/login'
 import useToken from '@/stores/token'
 const router = useRouter() // 得到一个router实例
 
@@ -8,7 +8,7 @@ const loginForm = reactive({
   // 手机号、密码 、是否同意
   mobile: '13800000002',
   password: 'hm#qd@23!',
-  isAgree: false,
+  isAgree: true,
 })
 // 自定义校验规则 rule是当前的规则 value是当前的值
 const validatorAgree = (rule, value) => {
@@ -45,7 +45,7 @@ const rules = {
 const onFinish = async (values) => {
   const { updateToken } = useToken()
   // values 是校验表单的数据
-  const data = await login(values)
+  const data = await loginAPI(values)
   updateToken(data)  // 更新 pinia 里面的token
   // 登录成功 要跳转到主页
   router.push("/")

@@ -7,6 +7,8 @@ import './styles/index.css'
 
 import '@/permission'
 
+import Icons from '@/components/Icons'
+
 // pinia 持久化插件
 import PluginState from 'pinia-plugin-persistedstate'
 
@@ -17,5 +19,7 @@ piniaApp.use(PluginState) // 注册持久化插件
 app.use(piniaApp) // 注册 pinia
 
 app.use(router)
+
+app.use(Icons)
 
 app.mount('#app')
