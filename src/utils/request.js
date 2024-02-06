@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { message as Msg } from 'ant-design-vue'
 import useToken from '@/stores/token'
+import router from '@/router'
 
 const http = axios.create({
   // 初始化参数
@@ -31,6 +32,16 @@ http.interceptors.response.use(
     // 报错
     return Promise.reject(new Error(message))
   },
-  (error) => Promise.reject(error)
+  (error) => {
+    if (error.response.status === 401) {
+      // 此时说明token超时了，超时和没有token是没有任何区别的
+      const { removeToken } = useToken()
+      // 删除token
+      removeToken()
+      // 回到登录
+      router.push('/login')
+    }
+    return Promise.reject(error)
+  }
 )
 export default http
