@@ -1,7 +1,8 @@
 <script setup>
 import { useRouter } from 'vue-router'  // 引入方法
-import { loginAPI } from '@/api/login'
+import { loginAPI, getUserInfoAPI, getUserBaseInfoAPI } from '@/api/login'
 import useToken from '@/stores/token'
+import useUserInfo from '@/stores/userInfo'
 const router = useRouter() // 得到一个router实例
 
 const loginForm = reactive({
@@ -41,15 +42,36 @@ const rules = {
     { validator: validatorAgree },
   ],
 }
+let loading = ref(false)
 // 提交表单
 const onFinish = async (values) => {
-  const { updateToken } = useToken()
-  // values 是校验表单的数据
-  const data = await loginAPI(values)
-  updateToken(data)  // 更新 pinia 里面的token
-  // 登录成功 要跳转到主页
-  router.push("/")
-};
+  try {
+    loading.value = true
+    const { updateToken } = useToken()
+    // values 是校验表单的数据
+    const data = await loginAPI(values)
+    updateToken(data)  // 更新 pinia 里面的 token
+    await getUserInfo()
+    loading.value = false
+
+    // 登录成功 要跳转到主页
+    router.push("/")
+  } catch (error) {
+    console.log(error, 'error')
+    loading.value = false
+  }
+}
+// 获取用户信息
+const getUserInfo = async () => {
+  const { userId, roles } = await getUserInfoAPI()
+  const data = await getUserBaseInfoAPI(userId)
+  const { updateUserInfo, addAuthorizedRoutes } = useUserInfo()
+  updateUserInfo({ ...data, roles })
+
+  // 根据权限添加路由
+  addAuthorizedRoutes()
+}
+;
 </script>
 
 <template>
@@ -69,7 +91,7 @@ const onFinish = async (values) => {
             <a-checkbox v-model:checked="loginForm.isAgree">用户平台使用协议</a-checkbox>
           </a-form-item>
           <a-form-item>
-            <a-button size="large" type="primary" block htmlType="submit">登录</a-button>
+            <a-button size="large" type="primary" block htmlType="submit" :loading="loading">登录</a-button>
           </a-form-item>
         </a-form>
       </a-card>

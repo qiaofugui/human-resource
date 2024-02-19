@@ -1,12 +1,18 @@
 import {
   HomeOutlined,
-  PartitionOutlined,
   SettingOutlined,
-  TeamOutlined,
   MenuUnfoldOutlined,
   MenuFoldOutlined,
   PoweroffOutlined,
-  LockOutlined
+  LockOutlined,
+  UserOutlined,
+  InsuranceOutlined,
+  TransactionOutlined,
+  AuditOutlined,
+  FundViewOutlined,
+  TeamOutlined,
+  PartitionOutlined,
+  ApartmentOutlined
 } from '@ant-design/icons-vue'
 
 const icons = [
@@ -17,7 +23,13 @@ const icons = [
   MenuUnfoldOutlined,
   MenuFoldOutlined,
   PoweroffOutlined,
-  LockOutlined
+  LockOutlined,
+  UserOutlined,
+  InsuranceOutlined,
+  TransactionOutlined,
+  AuditOutlined,
+  FundViewOutlined,
+  ApartmentOutlined
 ]
 export default {
   // 全局注册引入的所有图标

@@ -3,7 +3,7 @@
 </script>
 
 <template>
-Dashboard
+Social
 </template>
 
 <style lang="less" scoped>

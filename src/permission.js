@@ -1,9 +1,9 @@
 // 权限控制
 import router from '@/router'
 import useToken from '@/stores/token'
+import useUserInfo from '@/stores/userInfo'
 import nprogress from 'nprogress'
 import 'nprogress/nprogress.css' // 引入进度条样式
-// import { useRouter } from 'vue-router' 这个方法只能用在组件中
 
 // 进度条个性化配置
 nprogress.configure({
@@ -30,7 +30,7 @@ router.beforeEach((to, from, next) => {
       // 就是登录页
       next('/') // 跳转到主页
     } else {
-      next() // 放行的意思
+      next()
     }
   } else {
     // 没有 token 的情况下

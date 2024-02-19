@@ -3,7 +3,7 @@
 </script>
 
 <template>
-Dashboard
+Permission
 </template>
 
 <style lang="less" scoped>

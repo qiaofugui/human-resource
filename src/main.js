@@ -14,12 +14,12 @@ import PluginState from 'pinia-plugin-persistedstate'
 
 const app = createApp(App)
 
-const piniaApp = createPinia()
-piniaApp.use(PluginState) // 注册持久化插件
-app.use(piniaApp) // 注册 pinia
+app.use(Icons)
 
 app.use(router)
 
-app.use(Icons)
+const piniaApp = createPinia()
+piniaApp.use(PluginState) // 注册持久化插件
+app.use(piniaApp) // 注册 pinia
 
 app.mount('#app')

@@ -21,3 +21,11 @@ export function getUserInfoAPI() {
     method: 'get'
   })
 }
+
+// 用户基本信息
+export function getUserBaseInfoAPI(id) {
+  return request({
+    url: `/sys/user/${id}`,
+    method: 'get'
+  })
+}

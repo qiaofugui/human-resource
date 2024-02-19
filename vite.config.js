@@ -17,10 +17,7 @@ import autoprefixer from 'autoprefixer'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    vue({
-      // 显式启用响应性语法糖，支持对 defineProps 结果解构
-      reactivityTransform: true
-    }),
+    vue(),
     AutoImport({
       // 组件中不用再导入ref，reactive等
       imports: ['vue', 'vue-router'],

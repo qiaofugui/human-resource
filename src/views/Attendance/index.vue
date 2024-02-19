@@ -3,7 +3,7 @@
 </script>
 
 <template>
-Dashboard
+Attendance
 </template>
 
 <style lang="less" scoped>

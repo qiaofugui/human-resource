@@ -3,7 +3,7 @@
 </script>
 
 <template>
-Dashboard
+Approval
 </template>
 
 <style lang="less" scoped>
