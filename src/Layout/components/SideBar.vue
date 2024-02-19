@@ -20,7 +20,7 @@ const getMeta = (obj) => {
 </script>
 
 <template>
-  <a-menu class="side-bar" mode="inline" theme="dark">
+  <a-menu class="side-bar" mode="inline" theme="light" style="background: rgba(98, 38, 238, 0)">
     <!-- 循环路由信息 生成左侧菜单项 -->
     <a-menu-item v-for="(item, index) in userInfo.routes" :key="item.path" :class="router.path === item.path ? 'ant-menu-item-selected' : ''">
       <!-- 路由的链接 -->
@@ -34,3 +34,8 @@ const getMeta = (obj) => {
 </template>
 
 
+<style lang="less" scoped>
+:deep(.ant-menu-inline.ant-menu-root) {
+  background: green !important;
+}
+</style>

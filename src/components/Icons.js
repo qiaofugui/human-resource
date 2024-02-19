@@ -16,6 +16,10 @@ import {
   BellOutlined,
   CloseOutlined,
   CheckOutlined,
+  PlusCircleFilled,
+  FilePdfFilled,
+  AudioFilled,
+  BulbFilled,
 } from '@ant-design/icons-vue'
 
 const icons = [
@@ -36,6 +40,10 @@ const icons = [
   BellOutlined,
   CloseOutlined,
   CheckOutlined,
+  PlusCircleFilled,
+  FilePdfFilled,
+  AudioFilled,
+  BulbFilled,
 ]
 export default {
   // 全局注册引入的所有图标

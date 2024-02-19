@@ -34,7 +34,7 @@ const useUserInfo = defineStore('userInfo', () => {
       }
     })
     // 处理没有权限的路由导向404
-    router.addRoute({ path: '/:pathMatch(.*)*', redirect: '/404', hidden: true })
+    router.addRoute({ path: '/:pathMatch(.*)*', redirect: '/404', meta: { title: '404', icon: '', hidden: true } })
 
     routes.value = router.getRoutes().filter((item) => !item.meta.hidden)
   }

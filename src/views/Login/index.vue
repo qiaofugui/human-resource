@@ -63,10 +63,11 @@ const onFinish = async (values) => {
 }
 // 获取用户信息
 const getUserInfo = async () => {
-  const { userId, roles } = await getUserInfoAPI()
-  const data = await getUserBaseInfoAPI(userId)
+  const profile = await getUserInfoAPI()
+  const data = await getUserBaseInfoAPI(profile.userId)
   const { updateUserInfo, addAuthorizedRoutes } = useUserInfo()
-  updateUserInfo({ ...data, roles })
+  data.profile = profile
+  updateUserInfo({ ...data, roles: profile.roles })
 
   // 根据权限添加路由
   addAuthorizedRoutes()

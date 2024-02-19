@@ -36,7 +36,7 @@ const router = createRouter({
     },
     {
       path: '/',
-      // redirect: '/dashboard',
+      redirect: '/dashboard',
       name: 'layout',
       component: Layout,
       meta: {
@@ -64,7 +64,11 @@ const router = createRouter({
     // {
     //   path: '/:pathMatch(.*)*', // vue-router 通配符
     //   redirect: '/404',
-    //   hidden: true
+    //   meta: {
+    //     title: '404',
+    //     icon: '',
+    //     hidden: true
+    //   }
     // }
   ]
 })

@@ -18,7 +18,7 @@ onMounted(async () => {
 
   timer.value = setInterval(async () => {
     await getMessages()
-  }, 26000)
+  }, 2600)
 })
 onDeactivated(() => {
   clearInterval(timer.value)

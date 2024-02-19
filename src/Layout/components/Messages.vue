@@ -30,7 +30,7 @@ const deleteMessage = async (id) => {
       <template #tab>
         未读 <span class="text-base font-bold">{{ messagesData.unread.length }}</span> 条
       </template>
-      <a-result status="404" title="" sub-title="暂无消息"  v-if="messagesData.unread.length === 0"/>
+      <a-result status="404" title="" sub-title="暂无未读消息"  v-if="messagesData.unread.length === 0"/>
       <a-badge :dot="true" v-for="item in messagesData.unread" :key="item.id">
         <a-card size="small" style="width: 300px" class="mb-2 pr-1">
           <template #title>
@@ -63,7 +63,7 @@ const deleteMessage = async (id) => {
       <template #tab>
         已读 <span class="text-base font-bold">{{ messagesData.read.length }}</span> 条
       </template>
-      <a-result status="404" title="" sub-title="暂无消息"  v-if="messagesData.read.length === 0"/>
+      <a-result status="404" title="" sub-title="暂无已读消息"  v-if="messagesData.read.length === 0"/>
       <a-card size="small" v-for="item in messagesData.read" :key="item.id" class="mb-2">
         <template #title>
           <a-tag color="red" v-if="item.type === 4">紧急</a-tag>

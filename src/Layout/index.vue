@@ -9,7 +9,7 @@ const userInfo = useUserInfo()
 
 <template>
   <a-layout class="app-layout" breakpoint="lg" collapsed-width="0">
-    <a-layout-sider :collapsed="userInfo.collapsed" width="160">
+    <a-layout-sider :collapsed="userInfo.collapsed" width="160" style="background: rgba(98, 38, 238, .1)">
       <div class="logo">{{ userInfo.collapsed ? 'HR' : 'HRSASS' }}</div>
       <SideBar />
     </a-layout-sider>
@@ -17,7 +17,7 @@ const userInfo = useUserInfo()
       <a-layout-header>
         <NavBar />
       </a-layout-header>
-      <a-layout-content>
+      <a-layout-content style="padding: 15px; overflow-y: auto;">
         <!-- <router-view /> -->
         <router-view v-slot="{ Component }">
           <transition name="fade" mode="out-in">
@@ -57,9 +57,9 @@ const userInfo = useUserInfo()
       display: flex;
       justify-content: space-around;
       align-items: center;
-      color: #fff;
+      color: #6226ee;
       font-size: 24px;
-      text-shadow: 2px 2px 4px #666;
+      text-shadow: 2px 2px 4px #6226ee;
       transform: skewX(-10deg);
     }
   }
