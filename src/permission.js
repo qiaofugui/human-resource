@@ -30,7 +30,15 @@ router.beforeEach((to, from, next) => {
       // 就是登录页
       next('/') // 跳转到主页
     } else {
-      next()
+      if (useUserInfo().hasRoles) {
+        // 异步路由
+        useUserInfo().addAuthorizedRoutes()
+        // 刷新页面异步路由丢失问题
+        useUserInfo().updateHasRoles(false)
+        next({ ...to, replace: true })
+      } else {
+        next()
+      }
     }
   } else {
     // 没有 token 的情况下
