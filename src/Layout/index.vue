@@ -18,13 +18,31 @@ const userInfo = useUserInfo()
         <NavBar />
       </a-layout-header>
       <a-layout-content>
-        <router-view />
+        <!-- <router-view /> -->
+        <router-view v-slot="{ Component }">
+          <transition name="fade" mode="out-in">
+            <div>
+              <component :is="Component" />
+            </div>
+          </transition>
+        </router-view>
       </a-layout-content>
     </a-layout>
   </a-layout>
 </template>
 
 <style scoped lang="less">
+/* 路由切换动画 */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.35s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
 .app-layout {
   min-height: 100vh;
   display: flex;

@@ -12,7 +12,10 @@ import {
   FundViewOutlined,
   TeamOutlined,
   PartitionOutlined,
-  ApartmentOutlined
+  ApartmentOutlined,
+  BellOutlined,
+  CloseOutlined,
+  CheckOutlined,
 } from '@ant-design/icons-vue'
 
 const icons = [
@@ -29,7 +32,10 @@ const icons = [
   TransactionOutlined,
   AuditOutlined,
   FundViewOutlined,
-  ApartmentOutlined
+  ApartmentOutlined,
+  BellOutlined,
+  CloseOutlined,
+  CheckOutlined,
 ]
 export default {
   // 全局注册引入的所有图标
