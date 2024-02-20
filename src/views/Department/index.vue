@@ -44,6 +44,7 @@ const listToTree = (data) => {
 }
 
 const open = ref(false)
+const modalLoading = ref(false)
 const type = ref('add')
 const formRef = ref(null)
 const formState = ref({
@@ -96,7 +97,7 @@ const departmentHandle = (propsType, data) => {
       open.value = true
       break
     case 'delete':
-      formState.value = { ...formState.value, id: data.id}
+      formState.value = { ...formState.value, id: data.id }
       ok(propsType)
       break
   }
@@ -115,18 +116,26 @@ const ok = (propsType) => {
   }
 }
 // 添加部门
-const addDepartment = async (data) => {
-  const res = await postDepartmentAPI(data)
-  message.success('部门添加成功!')
-  getDepartment()
-  open.value = false
+const addDepartment = (data) => {
+  formRef.value.validate().then(async () => {
+    modalLoading.value = true
+    const res = await postDepartmentAPI(data)
+    message.success('部门添加成功!')
+    modalLoading.value = false
+    getDepartment()
+    open.value = false
+  })
 }
 // 更新部门
 const updateDepartment = async (data) => {
-  const res = await putDepartmentAPI(data, data.id)
-  message.success('部门更新成功!')
-  getDepartment()
-  open.value = false
+  formRef.value.validate().then(async () => {
+    modalLoading.value = true
+    const res = await putDepartmentAPI(data, data.id)
+    message.success('部门更新成功!')
+    modalLoading.value = false
+    getDepartment()
+    open.value = false
+  })
 }
 // 删除部门
 const deleteDepartment = async (id) => {
@@ -135,11 +144,7 @@ const deleteDepartment = async (id) => {
   getDepartment()
   open.value = false
 }
-
-const onContextMenuClick = (treeKey, menuKey) => {
-  console.log(`treeKey: ${treeKey}, menuKey: ${menuKey}`)
-  open.value = true
-};
+  ;
 </script>
 
 <template>
@@ -228,6 +233,7 @@ const onContextMenuClick = (treeKey, menuKey) => {
     @ok="ok(type, formState)"
     @cancel="formRef.resetFields()"
     :destroyOnClose="true"
+    :confirm-loading="modalLoading"
   >
     <a-form
       ref="formRef"
@@ -273,10 +279,14 @@ const onContextMenuClick = (treeKey, menuKey) => {
       <a-form-item
         label="部门介绍"
         name="introduce"
+        has-feedback
       >
         <a-textarea
           v-model:value="formState.introduce"
           placeholder="1-100个字符"
+          show-count
+          :maxlength="100"
+          :rows="3"
         />
       </a-form-item>
     </a-form>

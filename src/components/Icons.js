@@ -22,6 +22,7 @@ import {
   BulbFilled,
   DownOutlined,
   RedoOutlined,
+  PlusOutlined,
 } from '@ant-design/icons-vue'
 
 const icons = [
@@ -48,6 +49,7 @@ const icons = [
   BulbFilled,
   DownOutlined,
   RedoOutlined,
+  PlusOutlined,
 ]
 export default {
   // 全局注册引入的所有图标
