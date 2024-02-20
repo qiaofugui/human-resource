@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onDeactivated } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { Modal } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
 import useToken from '@/stores/token'
@@ -17,10 +17,10 @@ onMounted(async () => {
   await getMessages()
 
   timer.value = setInterval(async () => {
-    await getMessages()
-  }, 2600)
+    // await getMessages()
+  }, 3000)
 })
-onDeactivated(() => {
+onUnmounted(() => {
   clearInterval(timer.value)
 })
 
@@ -72,10 +72,10 @@ const logout = () => {
         <p>{{ user.username }}</p>
       </div>
       <template #content>
-        <div class="my-select">
-          <p class="item"><LockOutlined /><span> 锁定屏幕</span></p>
-          <p class="item"><UserOutlined /><span> 个人信息</span></p>
-          <p class="item" @click="logout"><PoweroffOutlined /><span> 退出登录</span></p>
+        <div class="my-select flex flex-col">
+          <a-button type="text" class="item"><LockOutlined /><span> 锁定屏幕</span></a-button>
+          <a-button type="text" class="item"><UserOutlined /><span> 个人信息</span></a-button>
+          <a-button type="text" class="item" @click="logout"><PoweroffOutlined /><span> 退出登录</span></a-button>
         </div>
       </template>
     </a-popover>
@@ -95,13 +95,6 @@ const logout = () => {
 
   .item {
     padding: 5px 20px;
-    margin-bottom: 0 !important;
-    color: #666;
-
-    &:hover {
-      background-color: #fafafa;
-      cursor: pointer;
-    }
   }
 }
 </style>

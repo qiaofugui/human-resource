@@ -20,6 +20,7 @@ import {
   FilePdfFilled,
   AudioFilled,
   BulbFilled,
+  DownOutlined,
 } from '@ant-design/icons-vue'
 
 const icons = [
@@ -44,6 +45,7 @@ const icons = [
   FilePdfFilled,
   AudioFilled,
   BulbFilled,
+  DownOutlined,
 ]
 export default {
   // 全局注册引入的所有图标

@@ -2,6 +2,7 @@
 import SideBar from './components/SideBar.vue'
 import NavBar from './components/NavBar.vue'
 import useUserInfo from '@/stores/userInfo'
+import { menuWidth } from '@/config/index'
 
 const userInfo = useUserInfo()
 ;
@@ -9,7 +10,7 @@ const userInfo = useUserInfo()
 
 <template>
   <a-layout class="app-layout" breakpoint="lg" collapsed-width="0">
-    <a-layout-sider :collapsed="userInfo.collapsed" width="160" style="background: rgba(98, 38, 238, .1)">
+    <a-layout-sider :collapsed="userInfo.collapsed" :width="menuWidth" style="background: rgba(98, 38, 238, .1)">
       <div class="logo">{{ userInfo.collapsed ? 'HR' : 'HRSASS' }}</div>
       <SideBar />
     </a-layout-sider>
@@ -18,31 +19,13 @@ const userInfo = useUserInfo()
         <NavBar />
       </a-layout-header>
       <a-layout-content style="padding: 15px; overflow-y: auto;">
-        <!-- <router-view /> -->
-        <router-view v-slot="{ Component }">
-          <transition name="fade" mode="out-in">
-            <div>
-              <component :is="Component" />
-            </div>
-          </transition>
-        </router-view>
+        <router-view />
       </a-layout-content>
     </a-layout>
   </a-layout>
 </template>
 
 <style scoped lang="less">
-/* 路由切换动画 */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.35s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
 .app-layout {
   min-height: 100vh;
   display: flex;

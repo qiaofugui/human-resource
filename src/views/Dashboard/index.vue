@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, watch } from 'vue'
+import { nextTick, onMounted, onUnmounted, watch } from 'vue'
 import { getHomeDataAPI, getNoticeAPI } from '@/api/dashboard'
 import useUserInfo from '@/stores/userInfo'
 // import * as echarts from 'echarts' // 引入所有的echarts
@@ -16,6 +16,7 @@ const { userInfo: user } = useUserInfo()
 onMounted(() => {
   getHomeData()
   getNotice()
+  insertWeather()
 })
 const homeData = ref(null)
 const getHomeData = async () => {
@@ -31,10 +32,7 @@ const getNotice = async () => {
 
 const date = ref()
 
-// 初始化天气
-onMounted(() => {
-  insertWeather()
-})
+let timer = ref(null)
 const insertWeather = () => {
   window.WIDGET = {
     "CONFIG": {
@@ -50,12 +48,20 @@ const insertWeather = () => {
   const script = document.createElement('script')
   script.src = 'https://widget.qweather.net/standard/static/js/he-standard-common.js?v=2.0'
   document.body.appendChild(script)
-  setTimeout(() => {
-    // document.querySelector('a[href*="qweather"]').style.display = 'none'
-    document.querySelector('#he-plugin-standard').style.width = '100%'
-    document.querySelector('#he-plugin-standard').style.height = '100%'
-  }, 1000)
+  nextTick(() => {
+        if (timer.value) {
+          clearInterval(timer.value)
+        }
+        timer.value = setTimeout(() => {
+        // document.querySelector('a[href*="qweather"]').style.display = 'none'
+        document.querySelector('#he-plugin-standard').style.width = '100%'
+        document.querySelector('#he-plugin-standard').style.height = '100%'
+    }, 1000)
+  })
 }
+onUnmounted(() => {
+  clearInterval(timer.value)
+})
 
 // 图表
 let socialRef = ref(null)
