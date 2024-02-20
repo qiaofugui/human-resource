@@ -26,7 +26,7 @@ onUnmounted(() => {
 
 const router = useRouter()
 
-const { userInfo: user, removeUserInfo, collapsed, toggleCollapsed } = useUserInfo()
+const { userInfo: user, removeUserInfo, collapsed, toggleCollapsed, toggleRefresh } = useUserInfo()
 
 // 退出登录
 const logout = () => {
@@ -49,9 +49,12 @@ const logout = () => {
 </script>
 
 <template>
-  <div class="cursor-pointer" @click="() => toggleCollapsed()">
-    <MenuUnfoldOutlined v-if="collapsed" />
-    <MenuFoldOutlined v-else />
+  <div class="cursor-pointer">
+    <MenuUnfoldOutlined v-if="collapsed" @click="() => toggleCollapsed()" />
+    <MenuFoldOutlined v-else @click="() => toggleCollapsed()" />
+    <a-tooltip title="刷新" placement="left" class="ml-2">
+      <a-button shape="circle" size="small" @click="toggleRefresh"><RedoOutlined /></a-button>
+    </a-tooltip>
   </div>
   <div class="flex items-center">
     <a-popover placement="bottom" trigger="click">

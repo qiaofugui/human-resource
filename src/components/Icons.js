@@ -21,6 +21,7 @@ import {
   AudioFilled,
   BulbFilled,
   DownOutlined,
+  RedoOutlined,
 } from '@ant-design/icons-vue'
 
 const icons = [
@@ -46,6 +47,7 @@ const icons = [
   AudioFilled,
   BulbFilled,
   DownOutlined,
+  RedoOutlined,
 ]
 export default {
   // 全局注册引入的所有图标

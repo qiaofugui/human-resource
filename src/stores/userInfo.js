@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { asyncRoutes } from '@/router'
+import throttle from 'lodash/throttle'
 
 const useUserInfo = defineStore('userInfo', () => {
   const router = useRouter()
@@ -39,7 +40,16 @@ const useUserInfo = defineStore('userInfo', () => {
     routes.value = router.getRoutes().filter((item) => !item.meta.hidden)
   }
 
-  return { userInfo, updateUserInfo, removeUserInfo, collapsed, toggleCollapsed, routes, hasRoles, updateHasRoles, addAuthorizedRoutes }
+  // 刷新
+  const refresh = ref(true)
+  const toggleRefresh = throttle(() => {
+    refresh.value = false
+    setTimeout(() => {
+      refresh.value = true
+    }, 360)
+  }, 3000)
+
+  return { userInfo, updateUserInfo, removeUserInfo, collapsed, toggleCollapsed, routes, hasRoles, updateHasRoles, addAuthorizedRoutes, refresh, toggleRefresh }
 }, {
   persist: {
     paths: ['userInfo', 'collapsed'],

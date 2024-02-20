@@ -19,7 +19,9 @@ const userInfo = useUserInfo()
         <NavBar />
       </a-layout-header>
       <a-layout-content style="padding: 15px; overflow-y: auto;">
-        <router-view />
+        <a-spin :spinning="!userInfo.refresh">
+          <router-view v-if="userInfo.refresh"/>
+        </a-spin>
       </a-layout-content>
     </a-layout>
   </a-layout>
