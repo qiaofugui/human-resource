@@ -85,7 +85,7 @@ onMounted(() => {
 const onSelect = async (selectedKeys, e) => {
   try {
     spinning.value = true
-    params.value.departmentId = e?.node.id || 1
+    params.value.departmentId = e?.node?.id || 1
     const res = await getEmployeeAPI(params.value)
     employeeData.value = res.rows
     total.value = res.total
