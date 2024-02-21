@@ -47,7 +47,7 @@ const roleData = ref([])
 const total = ref(0)
 const getRole = async () => {
   spinning.value = true
-  const data = await getRoleAPI(params)
+  const data = await getRoleAPI(params.value)
   roleData.value = data.rows.map(item => ({ ...item, state: item.state === 1 ? true : false, isEdit: false }))
   total.value = data.total
   spinning.value = false
@@ -221,14 +221,14 @@ const updateRolePermission = async () => {
             <div v-else>{{ record.description }}</div>
           </template>
           <template v-else-if="column.key === 'action'">
-            <a-space v-if="!record.isEdit">
+            <div v-if="!record.isEdit">
               <a-button
-                type="primary"
+                type="link"
                 size="small"
                 @click="openAllocation(record)"
               >分配权限</a-button>
               <a-button
-                type="primary"
+                type="link"
                 size="small"
                 @click="() => record.isEdit = true"
               >编辑</a-button>
@@ -242,12 +242,12 @@ const updateRolePermission = async () => {
                   <div>确定要删除 <span class="font-bold">{{ record.name }}</span> 吗?</div>
                 </template>
                 <a-button
-                  type="primary"
+                  type="link"
                   size="small"
                 >删除</a-button>
               </a-popconfirm>
-            </a-space>
-            <a-space v-else>
+            </div>
+            <div v-else>
               <a-button
                 type="primary"
                 size="small"
@@ -258,7 +258,7 @@ const updateRolePermission = async () => {
                 size="small"
                 @click="() => record.isEdit = false"
               >取消</a-button>
-            </a-space>
+            </div>
           </template>
         </template>
       </a-table>

@@ -23,6 +23,9 @@ import {
   DownOutlined,
   RedoOutlined,
   PlusOutlined,
+  SearchOutlined,
+  LoadingOutlined,
+  ExclamationCircleOutlined,
 } from '@ant-design/icons-vue'
 
 const icons = [
@@ -50,6 +53,9 @@ const icons = [
   DownOutlined,
   RedoOutlined,
   PlusOutlined,
+  SearchOutlined,
+  LoadingOutlined,
+  ExclamationCircleOutlined,
 ]
 export default {
   // 全局注册引入的所有图标

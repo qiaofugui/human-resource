@@ -17,8 +17,8 @@ onMounted(async () => {
   await getMessages()
 
   timer.value = setInterval(async () => {
-    // await getMessages()
-  }, 3000)
+    await getMessages()
+  }, 3600)
 })
 onUnmounted(() => {
   clearInterval(timer.value)
@@ -87,8 +87,8 @@ const logout = () => {
 
 <style lang="less" scoped>
 .my-avatar {
-  color: #f56a00;
-  background-color: #fde3cf;
+  color: #333;
+  background-color: rgba(98, 38, 238, .1);
   cursor: pointer;
   margin-right: 4px;
 }

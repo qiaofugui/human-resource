@@ -113,13 +113,13 @@ const handle = (account) => {
           @finish="onFinish"
           autocomplete="off"
         >
-          <a-form-item name="mobile">
+          <a-form-item name="mobile" has-feedback>
             <a-input
               size="large"
               v-model:value="loginForm.mobile"
             ></a-input>
           </a-form-item>
-          <a-form-item name="password">
+          <a-form-item name="password" has-feedback>
             <a-input-password
               size="large"
               v-model:value="loginForm.password"
