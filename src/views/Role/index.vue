@@ -249,12 +249,12 @@ const updateRolePermission = async () => {
             </div>
             <div v-else>
               <a-button
-                type="primary"
+                type="link"
                 size="small"
                 @click="updateRole(record)"
               >完成</a-button>
               <a-button
-                type="primary"
+                type="link"
                 size="small"
                 @click="() => record.isEdit = false"
               >取消</a-button>

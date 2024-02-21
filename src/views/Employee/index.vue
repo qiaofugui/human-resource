@@ -409,7 +409,7 @@ const okRole = async () => {
   <!-- 角色 -->
   <a-modal
     v-model:open="openRoleVisible"
-    title="群发通知"
+    title="分配角色"
     @ok="okRole"
     :destroyOnClose="true"
     :confirm-loading="roleModalLoading"
