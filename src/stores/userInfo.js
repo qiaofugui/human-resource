@@ -9,6 +9,9 @@ const useUserInfo = defineStore('userInfo', () => {
 
   const userInfo = ref(null)
   const updateUserInfo = (val) => userInfo.value = val
+  const updateUserInfoSingle = (key, val) => {
+    userInfo.value[key] = val
+  }
   const removeUserInfo = () => {
     userInfo.value = null
     routes.value = null
@@ -49,7 +52,7 @@ const useUserInfo = defineStore('userInfo', () => {
     }, 360)
   }, 3000)
 
-  return { userInfo, updateUserInfo, removeUserInfo, collapsed, toggleCollapsed, routes, hasRoles, updateHasRoles, addAuthorizedRoutes, refresh, toggleRefresh }
+  return { userInfo, updateUserInfo, removeUserInfo, collapsed, toggleCollapsed, routes, hasRoles, updateHasRoles, addAuthorizedRoutes, refresh, toggleRefresh, updateUserInfoSingle }
 }, {
   persist: {
     paths: ['userInfo', 'collapsed'],

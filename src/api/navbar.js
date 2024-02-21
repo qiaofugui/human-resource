@@ -22,3 +22,11 @@ export function deleteMessageAPI (id) {
     // data: id
   })
 }
+// 更新登录头像
+export function putAvatarAPI (data) {
+  return request({
+    url: '/sys/updateStaffPhoto',
+    method: 'put',
+    data
+  })
+}

@@ -3,6 +3,10 @@ import { postEmployeeAPI, putEmployeeAPI } from '@/api/employee'
 import { getUserBaseInfoAPI } from '@/api/login'
 import { onMounted, ref } from 'vue'
 import { message } from 'ant-design-vue'
+import { putAvatarAPI } from '@/api/navbar'
+import useUserInfo from '@/stores/userInfo'
+
+const userInfo = useUserInfo()
 
 // 添加/编辑员工
 const emit = defineEmits(['update:open', 'update:type', 'update:formState', 'cancel'])
@@ -23,6 +27,10 @@ const props = defineProps({
     type: Object,
     default: () => { }
   },
+  navbar: {
+    type: Boolean,
+    default: false
+  }
 })
 const modalLoading = ref(false)
 const formRef = ref(null)
@@ -143,8 +151,12 @@ const updateEmployee = async () => {
   try {
     const departmentId = props.formState.departmentId[props.formState.departmentId.length - 1]
     modalLoading.value = true
-    const res = await putEmployeeAPI({ ...props.formState, departmentId }, props.formState.id)
-    message.success('更新员工成功!')
+    const res = await putEmployeeAPI({ ...props.formState, staffPhoto: '', departmentId }, props.formState.id)
+    if (props.navbar || userInfo.userInfo.id === props.formState.id) {
+      await putAvatarAPI({ staffPhoto: imageUrl.value })
+      userInfo.updateUserInfoSingle('staffPhoto', imageUrl.value)
+    }
+    message.success('更新成功!')
     modalLoading.value = false
     emit('update:open', false)
     formRef.value.resetFields()
@@ -159,6 +171,9 @@ const ok = () => {
       addEmployee()
     }
     if (props.type === 'update') {
+      updateEmployee()
+    }
+    if (props.navbar) {
       updateEmployee()
     }
   })
@@ -262,13 +277,18 @@ const ok = () => {
       </a-form-item>
       <a-form-item name="staffPhoto">
         <template #label>
-          <a-tooltip placement="bottom">
+          <a-tooltip
+            placement="bottom"
+            v-if="!props.navbar"
+          >
             <template #title>
-              <span>接口不可用！</span>
+              <span>这里接口不可用，只能修改自己登录账号的头像！</span>
             </template>
-            员工头像
-            <ExclamationCircleOutlined />
+            员工头像 <ExclamationCircleOutlined />
           </a-tooltip>
+          <template v-else>
+            员工头像
+          </template>
         </template>
         <a-upload
           v-model:file-list="fileList"
@@ -278,9 +298,9 @@ const ok = () => {
           @change="uploadChange"
         >
           <a-image
-            v-if="imageUrl"
+            v-if="imageUrl || props.formState.staffPhoto"
             :preview="false"
-            :src="imageUrl"
+            :src="imageUrl || props.formState.staffPhoto"
             :height="100"
           />
           <div v-else>
