@@ -332,6 +332,7 @@ const updateRolePermission = async () => {
     :confirm-loading="allocationModalLoading"
   >
     <a-tree
+      v-if="roleTree.length"
       v-model:checkedKeys="checkedKeys"
       checkable
       autoExpandParent
@@ -339,6 +340,7 @@ const updateRolePermission = async () => {
       :tree-data="roleTree"
       :field-names="fieldNames"
       ref="treeRef"
+      defaultExpandAll
     >
       <template #title="{ name, id }">
         {{ name }}

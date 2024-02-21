@@ -47,10 +47,22 @@ const columns = [
   { title: '头像', dataIndex: 'staffPhoto', key: 'staffPhoto', width: 80 },
   { title: '姓名', dataIndex: 'username', key: 'username', width: 120 },
   { title: '手机号', dataIndex: 'mobile', key: 'mobile', width: 120 },
-  { title: '工号', dataIndex: 'workNumber', key: 'workNumber', width: 120 },
+  {
+    title: '工号', dataIndex: 'workNumber', key: 'workNumber', width: 120,
+    sorter: (a, b) => {
+      return a.workNumber.slice(5) - b.workNumber.slice(5)
+    }
+  },
   { title: '聘用形式', dataIndex: 'formOfEmployment', key: 'formOfEmployment', width: 120 },
   { title: '部门', dataIndex: 'departmentName', key: 'departmentName' },
-  { title: '入职时间', dataIndex: 'timeOfEntry', key: 'timeOfEntry' },
+  {
+    title: '入职时间', dataIndex: 'timeOfEntry', key: 'timeOfEntry', width: 120,
+    sorter: (a, b) => {
+      const a1 = a.timeOfEntry.replace(/-/g, '')
+      const b1 = b.timeOfEntry.replace(/-/g, '')
+      return a1 - b1
+    }
+  },
   {
     title: '操作',
     key: 'action',
@@ -221,7 +233,7 @@ const openRole = async (row) => {
 }
 const okRole = async () => {
   roleModalLoading.value = true
-  const res = await putRoleAPI({id: formState.value.id, roleIds: checkRoleList.value })
+  const res = await putRoleAPI({ id: formState.value.id, roleIds: checkRoleList.value })
   message.success('更新角色成功!')
   openRoleVisible.value = false
   roleModalLoading.value = false
@@ -271,7 +283,7 @@ const okRole = async () => {
           :row-selection="rowSelection"
           :columns="columns"
           :data-source="employeeData"
-          :scroll="{ x: 1500 }"
+          :scroll="{ x: 1100 }"
           :pagination="false"
           rowKey="id"
         >
@@ -324,7 +336,7 @@ const okRole = async () => {
         <div class="flex justify-end p-2">
           <a-pagination
             v-model:current="params.page"
-            v-model:page-size="params.pageSize"
+            v-model:page-size="params.pagesize"
             show-quick-jumper
             :total="total"
             :show-total="total => `共 ${total} 条`"
