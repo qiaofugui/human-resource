@@ -39,6 +39,8 @@ http.interceptors.response.use(
       // 删除token
       removeToken()
       // 回到登录
+      Msg.destroy()
+      Msg.warning('登录过期，请重新登录！')
       router.push('/login')
     }
     return Promise.reject(error)

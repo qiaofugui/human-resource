@@ -183,8 +183,8 @@ const ok = () => {
 
 <template>
   <a-modal
-    v-model:open="props.open"
-    :title="props.type === 'add' ? '添加员工' : '编辑员工'"
+    :open="props.open"
+    :title="props.navbar ? '个人信息' : props.type === 'add' ? '添加员工' : '编辑员工'"
     @ok="ok"
     @cancel="cancel"
     :destroyOnClose="true"
@@ -287,7 +287,7 @@ const ok = () => {
             员工头像 <ExclamationCircleOutlined />
           </a-tooltip>
           <template v-else>
-            员工头像
+            个人头像
           </template>
         </template>
         <a-upload

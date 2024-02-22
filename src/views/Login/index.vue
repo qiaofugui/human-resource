@@ -104,7 +104,7 @@ const handle = (account) => {
   <div class="login-container">
     <div class="logo">BackGround</div>
     <div class="form">
-      <h3>人力资源管理系统</h3>
+      <h3 class="hrsass">HRSASS</h3>
       <a-card class="login-card">
         <a-form
           ref="formRef"
@@ -113,13 +113,19 @@ const handle = (account) => {
           @finish="onFinish"
           autocomplete="off"
         >
-          <a-form-item name="mobile" has-feedback>
+          <a-form-item
+            name="mobile"
+            has-feedback
+          >
             <a-input
               size="large"
               v-model:value="loginForm.mobile"
             ></a-input>
           </a-form-item>
-          <a-form-item name="password" has-feedback>
+          <a-form-item
+            name="password"
+            has-feedback
+          >
             <a-input-password
               size="large"
               v-model:value="loginForm.password"
@@ -179,6 +185,11 @@ const handle = (account) => {
     justify-content: center;
     align-items: center;
     background-color: rgba(111, 98, 242, 0.1);
+  }
+  .hrsass {
+    color: rgba(111, 98, 242, 0.6);
+    text-shadow: 2px 2px 4px rgba(111, 98, 242, 0.1);
+    font-style: italic;
   }
 
   .form {

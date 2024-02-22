@@ -45,7 +45,7 @@ const userInfo = useUserInfo()
       color: #6226ee;
       font-size: 24px;
       text-shadow: 2px 2px 4px #6226ee;
-      transform: skewX(-10deg);
+      font-style: italic;
     }
   }
 
