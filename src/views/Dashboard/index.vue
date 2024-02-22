@@ -49,13 +49,13 @@ const insertWeather = () => {
   script.src = 'https://widget.qweather.net/standard/static/js/he-standard-common.js?v=2.0'
   document.body.appendChild(script)
   nextTick(() => {
-        if (timer.value) {
-          clearInterval(timer.value)
-        }
-        timer.value = setTimeout(() => {
-        // document.querySelector('a[href*="qweather"]').style.display = 'none'
-        document.querySelector('#he-plugin-standard').style.width = '100%'
-        document.querySelector('#he-plugin-standard').style.height = '100%'
+    if (timer.value) {
+      clearInterval(timer.value)
+    }
+    timer.value = setTimeout(() => {
+      // document.querySelector('a[href*="qweather"]').style.display = 'none'
+      document.querySelector('#he-plugin-standard').style.width = '100%'
+      document.querySelector('#he-plugin-standard').style.height = '100%'
     }, 1000)
   })
 }
@@ -106,9 +106,9 @@ const setOption = () => {
           color: {
             type: 'linear',
             colorStops: [{
-                offset: 0, color: 'rgba(98, 38, 238, 1)' // 0% 处的颜色
+              offset: 0, color: 'rgba(98, 38, 238, 1)' // 0% 处的颜色
             }, {
-                offset: 1, color: 'rgba(98, 38, 238, 0.4)' // 100% 处的颜色
+              offset: 1, color: 'rgba(98, 38, 238, 0.4)' // 100% 处的颜色
             }],
           }
         },
@@ -145,9 +145,9 @@ const setOption = () => {
           color: {
             type: 'linear',
             colorStops: [{
-                offset: 0, color: 'rgba(98, 38, 238, 1)' // 0% 处的颜色
+              offset: 0, color: 'rgba(98, 38, 238, 1)' // 0% 处的颜色
             }, {
-                offset: 1, color: 'rgba(98, 38, 238, 0.4)' // 100% 处的颜色
+              offset: 1, color: 'rgba(98, 38, 238, 0.4)' // 100% 处的颜色
             }],
           }
         },
@@ -166,7 +166,7 @@ const setOption = () => {
     :gutter="16"
     style="height: 300px"
   >
-    <a-col :span="12">
+    <a-col :span="8">
       <div class="bg-white h-full p-4">
         <header class="flex align-center">
           <a-avatar
@@ -234,7 +234,7 @@ const setOption = () => {
       </div>
     </a-col>
     <a-col
-      :span="12"
+      :span="8"
       style="height: 300px; max-width: 49.3%;"
       class="bg-white"
     >
@@ -257,55 +257,9 @@ const setOption = () => {
         </a-list>
       </div>
     </a-col>
-  </a-row>
-
-  <a-row
-    :gutter="8"
-    style="height: 300px"
-    class="mt-3"
-  >
     <a-col :span="8">
       <div class="bg-white h-full p-4">
         <div id="he-plugin-standard"></div>
-      </div>
-    </a-col>
-    <a-col :span="8">
-      <div class="bg-white h-full p-4">
-        <h1 class="text-base">帮助链接</h1>
-        <div class="links">
-          <div class="link-item">
-            <FilePdfFilled
-              class="mr-2"
-              style="color: #6226ee; font-size: 16px;"
-            />入门指南
-          </div>
-          <div class="link-item">
-            <BulbFilled
-              class="mr-2"
-              style="color: #6226ee; font-size: 16px;"
-            />在线帮助手册
-          </div>
-          <div class="link-item">
-            <AudioFilled
-              class="mr-2"
-              style="color: #6226ee; font-size: 16px;"
-            />联系技术支持
-          </div>
-          <div class="link-item">
-            <PlusCircleFilled
-              class="mr-2"
-              style="color: #6226ee; font-size: 16px;"
-            /> 添加链接
-          </div>
-        </div>
-      </div>
-    </a-col>
-    <a-col :span="8">
-      <div class="bg-white h-full p-4">
-        <a-calendar
-          v-model:value="date"
-          :fullscreen="false"
-        />
       </div>
     </a-col>
   </a-row>
@@ -313,9 +267,12 @@ const setOption = () => {
   <a-row
     :gutter="16"
     style="height: 300px"
-    class="mt-16 charts"
+    class="mt-3 charts"
   >
-    <a-col :span="12">
+    <a-col
+      :span="16"
+      style="padding-right: 0px;"
+    >
       <div class="bg-white h-full p-4">
         <h1 class="text-base">社保申报数据</h1>
         <div class="flex mt-6 h-full">
@@ -371,7 +328,25 @@ const setOption = () => {
         </div>
       </div>
     </a-col>
-    <a-col :span="12">
+    <a-col :span="8">
+      <div class="bg-white h-full p-4">
+        <a-calendar
+          v-model:value="date"
+          :fullscreen="false"
+        />
+      </div>
+    </a-col>
+  </a-row>
+
+  <a-row
+    :gutter="16"
+    style="height: 300px; margin-top: 92px;"
+    class="charts"
+  >
+    <a-col
+      :span="16"
+      style="padding-right: 0px;"
+    >
       <div class="bg-white h-full p-4">
         <h1 class="text-base">公积金申报数据</h1>
         <div class="flex mt-6 h-full">
@@ -423,6 +398,37 @@ const setOption = () => {
               id="provident"
               style="width: 100%; height: 300px"
             />
+          </div>
+        </div>
+      </div>
+    </a-col>
+    <a-col :span="8">
+      <div class="bg-white h-full p-4">
+        <h1 class="text-base">帮助链接</h1>
+        <div class="links">
+          <div class="link-item">
+            <FilePdfFilled
+              class="mr-2"
+              style="color: #6226ee; font-size: 16px;"
+            />入门指南
+          </div>
+          <div class="link-item">
+            <BulbFilled
+              class="mr-2"
+              style="color: #6226ee; font-size: 16px;"
+            />在线帮助手册
+          </div>
+          <div class="link-item">
+            <AudioFilled
+              class="mr-2"
+              style="color: #6226ee; font-size: 16px;"
+            />联系技术支持
+          </div>
+          <div class="link-item">
+            <PlusCircleFilled
+              class="mr-2"
+              style="color: #6226ee; font-size: 16px;"
+            /> 添加链接
           </div>
         </div>
       </div>
