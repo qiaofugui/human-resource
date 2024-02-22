@@ -43,6 +43,10 @@ http.interceptors.response.use(
       Msg.warning('登录过期，请重新登录！')
       router.push('/login')
     }
+    if (error.response.status === 500) {
+      Msg.destroy()
+      Msg.warning('无网络！')
+    }
     return Promise.reject(error)
   }
 )

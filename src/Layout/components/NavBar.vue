@@ -147,7 +147,7 @@ const cancel = () => {
     />
     <a-tooltip
       title="刷新"
-      placement="left"
+      placement="right"
       class="ml-2"
     >
       <a-button
