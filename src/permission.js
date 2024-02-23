@@ -22,6 +22,8 @@ nprogress.configure({
 
 const whiteList = ['/login', '/404'] // 登录页 404 白名单
 router.beforeEach((to, from, next) => {
+  // 设置网站标题
+  document.title = 'HR - ' + to.meta.title
   nprogress.start() // 开启进度条
   const { token } = useToken()
   if (token) {
