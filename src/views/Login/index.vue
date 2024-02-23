@@ -149,7 +149,7 @@ const handle = (account) => {
                       <a-button
                         type="text"
                         @click="handle('a')"
-                      >填入账号A</a-button>
+                      >填入账号A（管理员）</a-button>
                       <a-button
                         type="text"
                         @click="handle('b')"

@@ -115,6 +115,7 @@ const changeSize = (page, pageSize) => {
 
 // 调整薪水
 const adjustSalary = ref({})
+const adjustSalaryFormRef = ref(null)
 const adjustSalaryVisible = ref(false)
 const currentSalary = ref({})
 const getSalaryAdjustDetail = async (row) => {
@@ -152,6 +153,14 @@ const summation = computed(() => {
   }
 })
 
+const adjustSalaryCancel = () => {
+  adjustSalaryForm.value = {
+    currentBasicSalary: '',
+    currentPostWage: ''
+  }
+  adjustSalaryFormRef.value.resetFields()
+  adjustSalaryVisible.value = false
+}
 const adjustSalaryOk = async () => {
   await postSalaryAdjustAPI(adjustSalary.value.userId, { ...adjustSalaryForm.value, userId: adjustSalary.value.userId })
   message.success('调整成功!')
@@ -272,7 +281,7 @@ const cancel = () => {
     title="调整薪水"
     @ok="adjustSalaryOk"
     :destroyOnClose="true"
-    @cancel="adjustSalaryFormRef.resetFields()"
+    @cancel="adjustSalaryCancel"
   >
     <a-card title="基本信息">
       <a-row>
