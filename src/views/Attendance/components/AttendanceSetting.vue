@@ -1,7 +1,7 @@
 <script setup>
 import { message } from 'ant-design-vue'
 import { getAttendancesByDeptAPI, putAttendancesByDeptAPI, getAttendancesByDeptHolidaysAPI, postAttendancesByDeptHolidaysAPI, getAttendancesByDeptDeductionsAPI, postAttendancesByDeptDeductionsAPI, getAttendancesByDeptOvertimeAPI, putAttendancesByDeptOvertimeAPI } from '@/api/attendances'
-import { ref, defineEmits, defineProps, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import useUserInfo from '@/stores/userInfo'
 
 const userInfo = useUserInfo()
@@ -558,6 +558,7 @@ const ok = async () => {
                       <p class="mb-2">
                         早退≤ <a-input
                           v-model:value="item.periodUpperLimit"
+                          type="number"
                           style="width: 50px;"
                         /> 分钟
                       </p>
@@ -565,9 +566,11 @@ const ok = async () => {
                         <p class="mb-2">
                           早退≤ <a-input
                             v-model:value="item.timesUpperLimit"
+                            type="number"
                             style="width: 50px;"
                           /> 次，每次扣款 <a-input
                             v-model:value="item.dedAmonutUpperLimit"
+                            type="number"
                             style="width: 50px;"
                           /> 元
                         </p>
@@ -575,10 +578,12 @@ const ok = async () => {
                           早退> <a-input
                             v-model:value="item.timesLowerLimit"
                             style="width: 50px;"
+                            type="number"
                             disabled
                           /> 次，每次扣款 <a-input
                             v-model:value="item.dedAmonutLowerLimit"
                             style="width: 50px;"
+                            type="number"
                           /> 元
                         </p>
                       </div>
@@ -588,6 +593,7 @@ const ok = async () => {
                             v-model:value="item.periodLowerLimit"
                             style="width: 50px;"
                             disabled
+                            type="number"
                           /> 分钟
                         </p>
                         <div class="pl-6">
@@ -595,10 +601,12 @@ const ok = async () => {
                             早退≤ <a-input
                               v-model:value="item.isAbsenteeism"
                               style="width: 50px;"
+                              type="number"
                               disabled
                             /> 次，每次旷工 <a-input
                               v-model:value="item.absenceDays"
                               style="width: 50px;"
+                              type="number"
                             /> 天
                           </p>
                         </div>
@@ -623,6 +631,7 @@ const ok = async () => {
                         旷工按 <a-input
                           v-model:value="item.fineSalaryMultiples"
                           style="width: 50px;"
+                          type="number"
                         /> 倍工资处罚
                       </p>
                     </div>

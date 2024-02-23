@@ -177,7 +177,7 @@ const cancel = () => {
       <span class="text-base">部门：</span>
       <a-cascader
         v-model:value="checkOptions"
-        style="width: 40%"
+        style="width: 300px"
         multiple
         :options="options"
         placeholder="请选择筛选项"

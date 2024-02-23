@@ -26,6 +26,7 @@ import {
   SearchOutlined,
   LoadingOutlined,
   ExclamationCircleOutlined,
+  QuestionCircleOutlined,
 } from '@ant-design/icons-vue'
 
 const icons = [
@@ -56,6 +57,7 @@ const icons = [
   SearchOutlined,
   LoadingOutlined,
   ExclamationCircleOutlined,
+  QuestionCircleOutlined,
 ]
 export default {
   // 全局注册引入的所有图标
