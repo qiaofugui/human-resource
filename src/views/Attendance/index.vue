@@ -173,19 +173,18 @@ const cancel = () => {
       type="primary"
       @click="()=>attendanceSettingOpen = true"
     >设置</a-button>
-    <div class="mt-2">
+    <div class="mt-2 flex items-center">
       <span class="text-base">部门：</span>
       <a-cascader
         v-model:value="checkOptions"
         style="width: 300px"
         multiple
         :options="options"
-        placeholder="请选择筛选项"
+        placeholder="请选择部门筛选项"
         :show-search="{ filter }"
         :field-names="{ label: 'name', value: 'id', children: 'children' }"
         max-tag-count="responsive"
         @change="changeFilter"
-        size="large"
       ></a-cascader>
     </div>
   </div>

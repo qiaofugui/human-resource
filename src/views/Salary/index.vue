@@ -183,45 +183,46 @@ const cancel = () => {
       type="primary"
       @click="salarySettingOpen = true"
     >设置</a-button>
-    <div class="mt-2 flex">
-      <span
-        class="text-base"
-        style="width: 80px"
-      >聘用形式：</span>
-      <a-cascader
-        v-model:value="checkEmployment"
-        style="width: 300px"
-        multiple
-        :options="[{ name: '正式', id: 1 }, { name: '非正式', id: 2 }]"
-        placeholder="请选择筛选项"
-        :show-search="{ filter }"
-        :field-names="{ label: 'name', value: 'id', children: 'children' }"
-        max-tag-count="responsive"
-        @change="changeFilter"
-        size="large"
-      ></a-cascader>
-    </div>
-    <div class="mt-2 flex">
-      <span
-        class="text-base text-right"
-        style="width: 80px"
-      >部门：</span>
-      <a-cascader
-        v-model:value="checkOptions"
-        style="width: 300px"
-        multiple
-        :options="options"
-        placeholder="请选择筛选项"
-        :show-search="{ filter }"
-        :field-names="{ label: 'name', value: 'id', children: 'children' }"
-        max-tag-count="responsive"
-        @change="changeFilter"
-        size="large"
-      ></a-cascader>
+    <div class="mt-2 flex items-center">
+      <div class="flex items-center">
+        <span
+          class="text-base"
+          style="width: 80px"
+        >聘用形式：</span>
+        <a-cascader
+          v-model:value="checkEmployment"
+          style="width: 300px"
+          multiple
+          :options="[{ name: '正式', id: 1 }, { name: '非正式', id: 2 }]"
+          placeholder="请选择聘用形式筛选项"
+          :show-search="{ filter }"
+          :field-names="{ label: 'name', value: 'id', children: 'children' }"
+          max-tag-count="responsive"
+          @change="changeFilter"
+        ></a-cascader>
+      </div>
+      <div class="flex items-center">
+        <span
+          class="text-base text-right"
+          style="width: 80px"
+        >部门：</span>
+        <a-cascader
+          v-model:value="checkOptions"
+          style="width: 300px"
+          multiple
+          :options="options"
+          placeholder="请选择部门筛选项"
+          :show-search="{ filter }"
+          :field-names="{ label: 'name', value: 'id', children: 'children' }"
+          max-tag-count="responsive"
+          @change="changeFilter"
+        ></a-cascader>
+      </div>
     </div>
   </div>
 
-  <div class="mt-4 bg-white"> <a-table
+  <div class="mt-4 p-2 bg-white">
+    <a-table
       :columns="columns"
       rowKey="id"
       :data-source="data.rows"

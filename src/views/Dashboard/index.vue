@@ -164,9 +164,12 @@ const setOption = () => {
 <template>
   <a-row
     :gutter="16"
-    style="height: 300px"
+    style="max-height: 300px;"
   >
-    <a-col :span="8">
+    <a-col
+      :span="8"
+      style="max-height: 300px;"
+    >
       <div class="bg-white h-full p-4">
         <header class="flex align-center">
           <a-avatar
@@ -235,7 +238,7 @@ const setOption = () => {
     </a-col>
     <a-col
       :span="8"
-      style="height: 300px; max-width: 49.3%;"
+      style="max-height: 300px; max-width: 49.3%;"
       class="bg-white"
     >
       <div class="bg-white h-full p-4 relative">
@@ -247,7 +250,10 @@ const setOption = () => {
           <a-list-item v-for="item in noticeData">
             <a-list-item-meta :description="item.createTime">
               <template #title>
-                <a class="text-ellipsis block" :title="item.notice" >{{ item.notice }}</a>
+                <a
+                  class="text-ellipsis block"
+                  :title="item.notice"
+                >{{ item.notice }}</a>
               </template>
               <template #avatar>
                 <a-avatar :src="item.icon" />

@@ -216,7 +216,7 @@ const openDrawer = async (row) => {
     v-model:open="open"
     title="审批详情"
     placement="right"
-    :width="860"
+    width="75%"
   >
     <div class="flex">
       <div class="left pr-6">
