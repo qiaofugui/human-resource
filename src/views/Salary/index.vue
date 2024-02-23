@@ -242,10 +242,10 @@ const cancel = () => {
           {{ record.formOfEmployment == 1 ? '正式' : '非正式' }}
         </template>
         <template v-if="column.key === 'action'">
-          <a-button
+          <!-- <a-button
             type="link"
             @click=""
-          >详情</a-button>
+          >详情</a-button> -->
           <a-button
             type="link"
             @click="getSalaryAdjustDetail(record)"
