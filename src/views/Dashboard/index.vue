@@ -247,7 +247,7 @@ const setOption = () => {
           <a-list-item v-for="item in noticeData">
             <a-list-item-meta :description="item.createTime">
               <template #title>
-                <a>{{ item.notice }}</a>
+                <a class="text-ellipsis block" :title="item.notice" >{{ item.notice }}</a>
               </template>
               <template #avatar>
                 <a-avatar :src="item.icon" />
@@ -469,5 +469,11 @@ const setOption = () => {
 
 .charts .num :deep(.ant-statistic-content-value-int) {
   color: #6226ee;
+}
+.text-ellipsis {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  word-break: break-all;
+  white-space: nowrap;
 }
 </style>
