@@ -2,6 +2,7 @@
 import router from '@/router'
 import useToken from '@/stores/token'
 import useUserInfo from '@/stores/userInfo'
+import useLock from '@/stores/lock'
 import nprogress from 'nprogress'
 import 'nprogress/nprogress.css' // 引入进度条样式
 
@@ -23,7 +24,12 @@ nprogress.configure({
 const whiteList = ['/login', '/404'] // 登录页 404 白名单
 router.beforeEach((to, from, next) => {
   // 设置网站标题
-  document.title = 'HR - ' + to.meta.title
+  const lock = useLock()
+  if (lock.isLock) {
+    document.title = 'HR - ' + '锁定中'
+  } else {
+    document.title = 'HR - ' + to.meta.title
+  }
   nprogress.start() // 开启进度条
   const { token } = useToken()
   if (token) {

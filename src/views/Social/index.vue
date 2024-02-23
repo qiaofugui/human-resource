@@ -216,7 +216,7 @@ const putSocial = () => {
 
 <template>
   <div class="bg-white p-2">
-    <div class="mt-2 flex items-center">
+    <div class="flex items-center">
       <div class="flex items-center">
         <span
           class="text-base text-right"

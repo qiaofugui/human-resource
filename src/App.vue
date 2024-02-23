@@ -2,6 +2,10 @@
 import zhCN from 'ant-design-vue/es/locale/zh_CN'
 import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn'
+import Lock from '@/views/Lock/index.vue'
+import useLock from '@/stores/lock'
+
+const lock = useLock()
 
 // 设置主题色
 const theme = {
@@ -14,14 +18,18 @@ dayjs.locale('zh-cn')
 
 <template>
   <div class="app">
-    <a-config-provider :theme="theme" :locale="zhCN">
-      <router-view />
+    <a-config-provider
+      :theme="theme"
+      :locale="zhCN"
+    >
+      <router-view v-if="!lock.isLock" />
+      <Lock v-else />
     </a-config-provider>
   </div>
 </template>
 <style>
 .app {
-  width: 100%;
+  width: 100vw;
   min-height: 100vh;
 }
 </style>

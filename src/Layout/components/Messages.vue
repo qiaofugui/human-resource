@@ -7,7 +7,6 @@ const props = defineProps({
   messagesData: { type: Object, default: () => ({ read: [], unread: [] }) },
 })
 const emit = defineEmits(['getMessages'])
-console.log(props.messagesData)
 
 // 已读 read
 // 未读 unread

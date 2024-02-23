@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import { Modal } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
 import useToken from '@/stores/token'
@@ -9,6 +9,9 @@ import { getMessageAPI } from '@/api/navbar'
 import { getDepartmentAPI } from '@/api/department'
 import { getEmployeeInfoAPI } from '@/api/employee'
 import UserInfo from '@/views/Employee/components/UserInfo.vue'
+import useLock from '@/stores/lock'
+
+const lock = useLock()
 
 let messagesData = ref(null)
 let timer = ref(null)
@@ -29,7 +32,9 @@ onUnmounted(() => {
 
 const router = useRouter()
 
+// 解构出来失去响应式
 const { userInfo: user, removeUserInfo, collapsed, toggleCollapsed, toggleRefresh } = useUserInfo()
+const userInfo = useUserInfo()
 
 // 退出登录
 const logout = () => {
@@ -42,6 +47,8 @@ const logout = () => {
       const { removeToken } = useToken()
       removeToken()
       removeUserInfo()
+      lock.updateLock(false)
+      lock.updatePassword('')
 
       // 跳转到登录页
       router.push('/login')
@@ -132,17 +139,47 @@ const cancel = () => {
     staffPhoto: '',
   }
 }
+
+const lockFormRef = ref(null)
+const lockOpen = ref(false)
+const lockForm = ref({
+  password: ''
+})
+const lockRules = {
+  password: [
+    { required: true, message: '请设置锁屏密码', trigger: 'blur' },
+    { min: 6, message: '长度至少为6位', trigger: 'blur' },
+  ]
+}
+
+const openLock = () => {
+  lockForm.value.password = ''
+  lockOpen.value = true
+  nextTick(() => {
+    lockFormRef.value.clearValidate()
+  })
+
+}
+const lockOk = () => {
+  lockFormRef.value.validate().then(() => {
+    lock.updatePassword(lockForm.value.password)
+    lock.updateLock(true)
+    document.title = 'HR - 锁定中'
+  })
+}
   ;
 </script>
 
 <template>
-  <div class="cursor-pointer">
+  <div class="cursor-pointer flex items-center">
     <MenuUnfoldOutlined
-      v-if="collapsed"
+      v-if="userInfo.collapsed"
       @click="() => toggleCollapsed()"
+      style="font-size: 18px;"
     />
     <MenuFoldOutlined
       v-else
+      style="font-size: 18px;"
       @click="() => toggleCollapsed()"
     />
     <a-tooltip
@@ -206,6 +243,7 @@ const cancel = () => {
           <a-button
             type="text"
             class="item"
+            @click="openLock"
           >
             <LockOutlined /><span> 锁定屏幕</span>
           </a-button>
@@ -236,6 +274,42 @@ const cancel = () => {
       :navbar="true"
     />
   </div>
+
+  <a-modal
+    v-model:open="lockOpen"
+    title="设置锁屏密码"
+    @ok="lockOk"
+    :width="450"
+  >
+    <div class="flex flex-col justify-center items-center mb-6">
+      <div class="mb-2">
+        <a-avatar
+          class="lock-avatar"
+          v-if="user.staffPhoto"
+          :src="user.staffPhoto"
+        ></a-avatar>
+        <a-avatar
+          class="lock-avatar"
+          v-else
+        >{{ user.username.charAt(0) }}</a-avatar>
+      </div>
+      <div class="text-base">{{ user.username }}</div>
+    </div>
+    <a-form
+      ref="lockFormRef"
+      :model="lockForm"
+      :rules="lockRules"
+    >
+      <a-form-item name="password">
+        <a-input-password
+          v-model:value="lockForm.password"
+          placeholder="请设置锁屏密码"
+          has-feedback
+          @keyup.enter="lockOk"
+        />
+      </a-form-item>
+    </a-form>
+  </a-modal>
 </template>
 
 <style lang="less" scoped>
@@ -252,5 +326,10 @@ const cancel = () => {
   .item {
     padding: 5px 20px;
   }
+}
+.lock-avatar {
+  width: 80px;
+  height: 80px;
+  background-color: rgba(98, 38, 238, 0.1);
 }
 </style>
