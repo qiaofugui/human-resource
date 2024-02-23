@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { message as Msg } from 'ant-design-vue'
 import useToken from '@/stores/token'
+import useUserInfo from '@/stores/userInfo'
 import router from '@/router'
 
 const http = axios.create({
@@ -38,6 +39,10 @@ http.interceptors.response.use(
       const { removeToken } = useToken()
       // 删除token
       removeToken()
+      const { removeUserInfo } = useUserInfo()
+      removeUserInfo()
+      lock.updateLock(false)
+      lock.updatePassword('')
       // 回到登录
       Msg.destroy()
       Msg.warning('登录过期，请重新登录！')

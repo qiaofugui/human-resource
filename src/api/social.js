@@ -27,7 +27,7 @@ export function getSocialDetailAPI (id) {
 
 export function getSocialBaseAPI (id) {
   return request({
-    url: `social_securitys/payment_item/${id}`,
+    url: `/social_securitys/payment_item/${id}`,
     method: 'get'
   })
 }

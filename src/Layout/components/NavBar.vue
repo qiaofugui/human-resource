@@ -25,7 +25,7 @@ onMounted(async () => {
 
   timer.value = setInterval(async () => {
     await getMessages()
-  }, 3600)
+  }, 8000)
 })
 onUnmounted(() => {
   clearInterval(timer.value)

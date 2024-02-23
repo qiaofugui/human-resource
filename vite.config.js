@@ -47,6 +47,14 @@ export default defineConfig({
     }
   },
   server: {
+    // TODO 上线问题
+    // 接口不支持跨域如果要上线，需要在nginx.conf的对应配置中，增加
+    // #代理后端接口
+    // location /api/ {
+    //     proxy_pass http://heimahr.itheima.net; #转发请求接口
+    //     proxy_connect_timeout 6000; #链接超时设置
+    //     proxy_read_timeout 6000; #访问接口超时设置
+    // }
     proxy: {
       '/api': {
         // target: 'http://ihrm.itheima.net',

@@ -33,19 +33,19 @@ export function deleteRoleAPI (id) {
 // 获取权限树
 export function getRolePermissionAPI () {
   return request({
-    url: `sys/permission`,
+    url: `/sys/permission`,
   })
 }
 // 获取角色已拥有权限
 export function getRoleHavePermissionAPI (id) {
   return request({
-    url: `sys/role/${id}`,
+    url: `/sys/role/${id}`,
   })
 }
 // 分配权限
 export function putRolePermissionAPI (data) {
   return request({
-    url: `sys/role/assignPrem`,
+    url: `/sys/role/assignPrem`,
     method: 'put',
     data
   })

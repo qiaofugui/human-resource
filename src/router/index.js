@@ -11,7 +11,11 @@ import salaryRouter from './modules/salary'
 import socialRouter from './modules/social'
 
 const router = createRouter({
+  // TODO 上线问题
+  // 使用createWebHistory路由模式需要在Nginx修改配置文件
+  // 刷新后，浏览器根据当前的url去请求html文件，但是SPA只有一个html文件，所以需要在nginx.conf的对应location里配置一行代码 "try_files $uri  $uri/ /index.html;"
   history: createWebHistory(import.meta.env.BASE_URL),
+  // history: createWebHashHistory(import.meta.env.BASE_URL),
   scrollBehavior: () => ({ y: 0 }),
   routes: [
     {
