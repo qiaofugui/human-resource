@@ -27,6 +27,8 @@ import {
   LoadingOutlined,
   ExclamationCircleOutlined,
   QuestionCircleOutlined,
+  FullscreenOutlined,
+  FullscreenExitOutlined,
 } from '@ant-design/icons-vue'
 
 const icons = [
@@ -58,6 +60,8 @@ const icons = [
   LoadingOutlined,
   ExclamationCircleOutlined,
   QuestionCircleOutlined,
+  FullscreenOutlined,
+  FullscreenExitOutlined,
 ]
 export default {
   // 全局注册引入的所有图标

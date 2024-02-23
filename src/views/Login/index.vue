@@ -101,77 +101,83 @@ const handle = (account) => {
 </script>
 
 <template>
-  <div class="login-container">
-    <div class="logo">BackGround</div>
-    <div class="form">
-      <h3 class="hrsass">HRSASS</h3>
-      <a-card class="login-card">
-        <a-form
-          ref="formRef"
-          :model="loginForm"
-          :rules="rules"
-          @finish="onFinish"
-          autocomplete="off"
-        >
-          <a-form-item
-            name="mobile"
-            has-feedback
+  <a-watermark content="qiaofugui.cn" :font="{ fontSize: 14}">
+    <div class="login-container">
+      <!-- <div class="logo"> -->
+        <a-watermark class="logo text-gray-500" content="BackGround" :gap="[210, 210]">
+          BackGround
+        </a-watermark>
+      <!-- </div> -->
+      <div class="form">
+        <h3 class="hrsass">HRSASS</h3>
+        <a-card class="login-card">
+          <a-form
+            ref="formRef"
+            :model="loginForm"
+            :rules="rules"
+            @finish="onFinish"
+            autocomplete="off"
           >
-            <a-input
-              size="large"
-              v-model:value="loginForm.mobile"
-            ></a-input>
-          </a-form-item>
-          <a-form-item
-            name="password"
-            has-feedback
-          >
-            <a-input-password
-              size="large"
-              v-model:value="loginForm.password"
-              @keyup.enter="onFinish"
-            ></a-input-password>
-          </a-form-item>
-          <a-form-item name="isAgree">
-            <div class="flex items-center">
-              <a-checkbox v-model:checked="loginForm.isAgree">用户平台使用协议</a-checkbox>
-              <a-popover
-                trigger="hover"
-                placement="top"
-              >
-                <template #content>
-                  <div class="popover flex flex-col">
-                    <a-button
-                      type="text"
-                      @click="handle('a')"
-                    >填入账号A</a-button>
-                    <a-button
-                      type="text"
-                      @click="handle('b')"
-                    >填入账号B</a-button>
-                    <a-button
-                      type="text"
-                      @click="handle('c')"
-                    >填入账号C</a-button>
-                  </div>
-                </template>
-                <a-button type="link">填入账号</a-button>
-              </a-popover>
-            </div>
-          </a-form-item>
-          <a-form-item>
-            <a-button
-              size="large"
-              type="primary"
-              block
-              htmlType="submit"
-              :loading="loading"
-            >登录</a-button>
-          </a-form-item>
-        </a-form>
-      </a-card>
+            <a-form-item
+              name="mobile"
+              has-feedback
+            >
+              <a-input
+                size="large"
+                v-model:value="loginForm.mobile"
+              ></a-input>
+            </a-form-item>
+            <a-form-item
+              name="password"
+              has-feedback
+            >
+              <a-input-password
+                size="large"
+                v-model:value="loginForm.password"
+                @keyup.enter="onFinish"
+              ></a-input-password>
+            </a-form-item>
+            <a-form-item name="isAgree">
+              <div class="flex items-center">
+                <a-checkbox v-model:checked="loginForm.isAgree">用户平台使用协议</a-checkbox>
+                <a-popover
+                  trigger="hover"
+                  placement="top"
+                >
+                  <template #content>
+                    <div class="popover flex flex-col">
+                      <a-button
+                        type="text"
+                        @click="handle('a')"
+                      >填入账号A</a-button>
+                      <a-button
+                        type="text"
+                        @click="handle('b')"
+                      >填入账号B</a-button>
+                      <a-button
+                        type="text"
+                        @click="handle('c')"
+                      >填入账号C</a-button>
+                    </div>
+                  </template>
+                  <a-button type="link">填入账号</a-button>
+                </a-popover>
+              </div>
+            </a-form-item>
+            <a-form-item>
+              <a-button
+                size="large"
+                type="primary"
+                block
+                htmlType="submit"
+                :loading="loading"
+              >登录</a-button>
+            </a-form-item>
+          </a-form>
+        </a-card>
+      </div>
     </div>
-  </div>
+  </a-watermark>
 </template>
 
 <style lang="less">

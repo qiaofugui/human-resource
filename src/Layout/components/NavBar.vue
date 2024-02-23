@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, onUnmounted, nextTick } from 'vue'
-import { Modal } from 'ant-design-vue'
+import { message, Modal } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
 import useToken from '@/stores/token'
 import useUserInfo from '@/stores/userInfo'
@@ -10,6 +10,7 @@ import { getDepartmentAPI } from '@/api/department'
 import { getEmployeeInfoAPI } from '@/api/employee'
 import UserInfo from '@/views/Employee/components/UserInfo.vue'
 import useLock from '@/stores/lock'
+import screenfull from 'screenfull'
 
 const lock = useLock()
 
@@ -167,21 +168,41 @@ const lockOk = () => {
     document.title = 'HR - 锁定中'
   })
 }
+
+// 全屏
+const isFullscreen = ref(false)
+const changeScreenfull = () => {
+  if (!screenfull.isEnabled) {
+    message.warning('浏览器不支持全屏')
+  } else {
+    screenfull.toggle()
+  }
+}
+const change = () => {
+  if (screenfull.isEnabled) isFullscreen.value = screenfull.isFullscreen
+}
+onMounted(() => screenfull.isEnabled && screenfull.on('change', change))
+onUnmounted(() => screenfull.isEnabled && screenfull.off('change', change))
   ;
 </script>
 
 <template>
   <div class="cursor-pointer flex items-center">
-    <MenuUnfoldOutlined
-      v-if="userInfo.collapsed"
-      @click="() => toggleCollapsed()"
-      style="font-size: 18px;"
-    />
-    <MenuFoldOutlined
-      v-else
-      style="font-size: 18px;"
-      @click="() => toggleCollapsed()"
-    />
+    <a-tooltip
+      :title="userInfo.collapsed ? '展开' : '收起'"
+      placement="left"
+    >
+      <MenuUnfoldOutlined
+        v-if="userInfo.collapsed"
+        @click="() => toggleCollapsed()"
+        style="font-size: 18px;"
+      />
+      <MenuFoldOutlined
+        v-else
+        style="font-size: 18px;"
+        @click="() => toggleCollapsed()"
+      />
+    </a-tooltip>
     <a-tooltip
       title="刷新"
       placement="right"
@@ -197,19 +218,37 @@ const lockOk = () => {
     </a-tooltip>
   </div>
   <div class="flex items-center">
+    <div
+      style="font-size: 22px;"
+      class="mr-2 cursor-pointer"
+      @click="changeScreenfull"
+    >
+      <a-tooltip
+        :title="isFullscreen ? '退出全屏' : '全屏'"
+        placement="bottom"
+      >
+        <FullscreenOutlined v-if="!isFullscreen" />
+        <FullscreenExitOutlined v-else />
+      </a-tooltip>
+    </div>
     <a-popover
       placement="bottom"
       trigger="click"
     >
-      <a-badge
-        :count="messagesData?.unread.length"
-        class="mr-3"
+      <a-tooltip
+        title="消息"
+        placement="bottom"
       >
-        <BellOutlined
-          style="font-size: 22px;"
-          class="cursor-pointer"
-        />
-      </a-badge>
+        <a-badge
+          :count="messagesData?.unread.length"
+          class="mr-3"
+        >
+          <BellOutlined
+            style="font-size: 22px;"
+            class="cursor-pointer"
+          />
+        </a-badge>
+      </a-tooltip>
       <template #content>
         <Messages
           :messagesData="messagesData"
