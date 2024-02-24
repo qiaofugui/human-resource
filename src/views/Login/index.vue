@@ -101,10 +101,17 @@ const handle = (account) => {
 </script>
 
 <template>
-  <a-watermark content="qiaofugui.cn" :font="{ fontSize: 14}">
+  <a-watermark
+    content="qiaofugui.cn"
+    :font="{ fontSize: 14}"
+  >
     <div class="login-container">
       <div class="logo">
         <!-- <a-watermark class="logo text-gray-500" content="BackGround" :gap="[210, 210]"> -->
+        <img
+          src="@/assets/images/background1.png"
+          style="height: 80%; max-height: 980px;"
+        />
         <!-- </a-watermark> -->
       </div>
       <div class="form">
@@ -124,6 +131,7 @@ const handle = (account) => {
               <a-input
                 size="large"
                 v-model:value="loginForm.mobile"
+                placeholder="请输入账号"
               ></a-input>
             </a-form-item>
             <a-form-item
@@ -134,6 +142,7 @@ const handle = (account) => {
                 size="large"
                 v-model:value="loginForm.password"
                 @keyup.enter="onFinish"
+                placeholder="请输入密码"
               ></a-input-password>
             </a-form-item>
             <a-form-item name="isAgree">
@@ -185,12 +194,15 @@ const handle = (account) => {
   height: 100vh;
 
   .logo {
-    flex: 7;
+    width: 65%;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: url('@/assets/images/background.png') center center;
-    background-size: contain;
+    background-color: rgba(111, 98, 242, 0.2);
+
+    img {
+      object-fit: cover;
+    }
   }
   .hrsass {
     color: rgba(111, 98, 242, 0.6);
@@ -199,7 +211,7 @@ const handle = (account) => {
   }
 
   .form {
-    flex: 3;
+    width: 35%;
     display: flex;
     flex-direction: column;
     justify-content: center;

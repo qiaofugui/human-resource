@@ -61,6 +61,7 @@ export default defineConfig({
         target: 'http://heimahr.itheima.net',
         changeOrigin: true
       }
-    }
+    },
+    host: '0.0.0.0'
   },
 })
