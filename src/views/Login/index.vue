@@ -103,11 +103,10 @@ const handle = (account) => {
 <template>
   <a-watermark content="qiaofugui.cn" :font="{ fontSize: 14}">
     <div class="login-container">
-      <!-- <div class="logo"> -->
-        <a-watermark class="logo text-gray-500" content="BackGround" :gap="[210, 210]">
-          BackGround
-        </a-watermark>
-      <!-- </div> -->
+      <div class="logo">
+        <!-- <a-watermark class="logo text-gray-500" content="BackGround" :gap="[210, 210]"> -->
+        <!-- </a-watermark> -->
+      </div>
       <div class="form">
         <h3 class="hrsass">HRSASS</h3>
         <a-card class="login-card">
@@ -190,7 +189,8 @@ const handle = (account) => {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba(111, 98, 242, 0.1);
+    background: url('@/assets/images/background.png') center center;
+    background-size: contain;
   }
   .hrsass {
     color: rgba(111, 98, 242, 0.6);

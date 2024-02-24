@@ -1,7 +1,7 @@
 <script setup>
-import { ref, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick, computed } from 'vue'
 import { message, Modal } from 'ant-design-vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import useToken from '@/stores/token'
 import useUserInfo from '@/stores/userInfo'
 import Messages from './Messages.vue'
@@ -32,6 +32,7 @@ onUnmounted(() => {
 })
 
 const router = useRouter()
+const route = useRoute()
 
 // 解构出来失去响应式
 const { userInfo: user, removeUserInfo, collapsed, toggleCollapsed, toggleRefresh } = useUserInfo()
@@ -183,6 +184,13 @@ const change = () => {
 }
 onMounted(() => screenfull.isEnabled && screenfull.on('change', change))
 onUnmounted(() => screenfull.isEnabled && screenfull.off('change', change))
+
+// 面包屑
+const matched = computed(() => {
+  // 删除path 是 /dashboard 的一项
+  return route.matched.filter(item => item.path !== '/dashboard')
+})
+
   ;
 </script>
 
@@ -203,10 +211,22 @@ onUnmounted(() => screenfull.isEnabled && screenfull.off('change', change))
         @click="() => toggleCollapsed()"
       />
     </a-tooltip>
+    <!-- 面包屑 -->
+    <a-breadcrumb class="px-2">
+      <a-breadcrumb-item v-for="item in matched">
+        <template v-if="item.path === '/'">
+          <router-link to="/">
+            首页
+          </router-link>
+        </template>
+        <template v-else-if="item.path !== router.path">
+          {{ item.meta.title }}
+        </template>
+      </a-breadcrumb-item>
+    </a-breadcrumb>
     <a-tooltip
       title="刷新"
       placement="right"
-      class="ml-2"
     >
       <a-button
         shape="circle"

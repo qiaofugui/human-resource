@@ -1,0 +1,1 @@
+import{p as n,v as _,x as t,M as c,y as r,h as u,C as p,H as i}from"./index-en2k_Z5T.js";const f={__name:"index",setup(l){const e=n(),o=()=>{e.push("/")};return(m,x)=>{const s=i,a=c;return r(),_(a,{status:"404",title:"404","sub-title":"您访问的页面不存在！"},{extra:t(()=>[u(s,{type:"primary",onClick:o},{default:t(()=>[p("回到首页")]),_:1})]),_:1})}}};export{f as default};

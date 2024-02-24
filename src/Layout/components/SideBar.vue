@@ -1,8 +1,8 @@
 
 <script setup>
-import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import useUserInfo from '@/stores/userInfo'
+import { watch } from 'vue'
 
 const userInfo = useUserInfo()
 const router = useRoute()
@@ -16,15 +16,20 @@ const getMeta = (obj) => {
   }
   return obj.meta
 }
+
+const selectedKeys = ref([router.path])
+watch(router, () => {
+  selectedKeys.value = [router.path]
+})
   ;
 </script>
 
 <template>
-  <a-menu class="side-bar" mode="inline" theme="light" style="background: rgba(98, 38, 238, 0)">
+  <a-menu mode="inline" theme="light" style="background: rgba(98, 38, 238, 0)" v-model:selectedKeys="selectedKeys">
     <!-- 循环路由信息 生成左侧菜单项 -->
-    <a-menu-item v-for="(item, index) in userInfo.routes" :key="item.path" :class="router.path === item.path ? 'ant-menu-item-selected' : ''">
+    <a-menu-item v-for="(item, index) in userInfo.routes" :key="item.path">
       <!-- 路由的链接 -->
-      <router-link class="link-name" :to="item.path">
+      <router-link :to="item.path">
         <!-- Vue动态组件 component is(组件名称) -->
           <component :is="getMeta(item).icon" :style="{ fontSize: '16px' }" />
         <span :style="{ fontSize: '14px' }">{{ getMeta(item).title }}</span>
