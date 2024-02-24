@@ -5,12 +5,20 @@ import useUserInfo from '@/stores/userInfo'
 import { menuWidth } from '@/config/index'
 
 const userInfo = useUserInfo()
-;
+  ;
 </script>
 
 <template>
-  <a-layout class="app-layout" breakpoint="lg" collapsed-width="0">
-    <a-layout-sider :collapsed="userInfo.collapsed" :width="menuWidth" style="background: rgba(98, 38, 238, .1)">
+  <a-layout
+    class="app-layout"
+    breakpoint="lg"
+    collapsed-width="0"
+  >
+    <a-layout-sider
+      :collapsed="userInfo.collapsed"
+      :width="menuWidth"
+      style="background: rgba(98, 38, 238, .1)"
+    >
       <div class="logo">{{ userInfo.collapsed ? 'HR' : 'HRSASS' }}</div>
       <SideBar />
     </a-layout-sider>
@@ -20,7 +28,19 @@ const userInfo = useUserInfo()
       </a-layout-header>
       <a-layout-content style="padding: 15px; overflow-y: auto;">
         <a-spin :spinning="!userInfo.refresh">
-          <router-view v-if="userInfo.refresh"/>
+          <router-view
+            v-slot="{ Component }"
+            v-if="userInfo.refresh"
+          >
+            <transition
+              name="fade"
+              mode="out-in"
+              appear
+            >
+              <component :is="Component" />
+            </transition>
+          </router-view>
+          <!-- <router-view /> -->
         </a-spin>
       </a-layout-content>
     </a-layout>
@@ -67,5 +87,15 @@ const userInfo = useUserInfo()
       cursor: pointer;
     }
   }
+}
+/* 路由切换动画 */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.35s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

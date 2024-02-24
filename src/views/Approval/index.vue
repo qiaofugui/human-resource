@@ -137,170 +137,172 @@ const openDrawer = async (row) => {
 </script>
 
 <template>
-  <div class="bg-white p-2 flex">
-    <a-card
-      hoverable
-      style="width: 180px"
-      class="mr-4"
-    >
-      <a-statistic
-        title="当前审批中"
-        :value="data.currApproveCount"
-      />
-    </a-card>
-    <a-card
-      hoverable
-      style="width: 180px"
-      class="mr-4"
-    >
-      <a-statistic
-        title="本月审批通过"
-        :value="data.approveCount"
-      />
-    </a-card>
-    <a-card
-      hoverable
-      style="width: 180px"
-    >
-      <a-statistic
-        title="本月审批驳回"
-        :value="data.rejectionCount"
-      />
-    </a-card>
-  </div>
-  <div class="bg-white p-2 mt-4">
-
-    <a-table
-      :columns="columns"
-      rowKey="id"
-      :data-source="data.rows"
-      :pagination="false"
-      :loading="loading"
-    >
-      <template #headerCell="{ column }">
-        <template v-if="column.key === 'processId'">
-          ID
-        </template>
-      </template>
-      <template #bodyCell="{ column, record }">
-        <template v-if="column.key === 'processState'">
-          <a-tag
-            color="yellow"
-            v-if="record.processState == 0"
-          >{{ processState(record.processState) }}</a-tag>
-          <a-tag
-            color="purple"
-            v-if="record.processState == 1"
-          >{{ processState(record.processState) }}</a-tag>
-          <a-tag
-            color="green"
-            v-else-if="record.processState == 2"
-          >{{ processState(record.processState) }}</a-tag>
-          <a-tag
-            color="red"
-            v-else-if="record.processState == 3 || record.processState == 4"
-          >{{ processState(record.processState) }}</a-tag>
-        </template>
-        <template v-if="column.key === 'action'">
-          <a-button
-            type="link"
-            @click="openDrawer(record)"
-          >详情</a-button>
-        </template>
-      </template>
-    </a-table>
-  </div>
-
-  <!-- 详情抽屉 -->
-  <a-drawer
-    v-model:open="open"
-    title="审批详情"
-    placement="right"
-    width="75%"
-  >
-    <div class="flex">
-      <div class="left pr-6">
-        <h1 class="text-base">申请人信息</h1>
-        <a-row class="my-6">
-          <a-col :span="12">
-            <span
-              class="text-gray-500"
-              style="padding-left: 27px;"
-            >姓名：</span> {{ detail.username }}
-          </a-col>
-          <a-col :span="12">
-            <span class="text-gray-500">部门：</span> {{ detail.departmentName }}
-          </a-col>
-          <a-col
-            :span="12"
-            class="mt-4"
-          >
-            <span class="text-gray-500">入职时间：</span> {{ detail.timeOfEntry }}
-          </a-col>
-        </a-row>
-
-        <a-divider />
-
-        <h1 class="text-base">请假申请</h1>
-        <a-row class="my-6">
-          <a-col :span="12">
-            <span class="text-gray-500">审批类型：</span> {{ detail.processName }}
-          </a-col>
-          <a-col :span="12">
-            <span class="text-gray-500">开始时间：</span> {{ detail.procData.startTime || '-' }}
-          </a-col>
-          <a-col
-            :span="12"
-            class="mt-4"
-          >
-            <span class="text-gray-500">休假类别：</span> {{ detail.procData.processName || '-' }}
-          </a-col>
-          <a-col
-            :span="12"
-            class="mt-4"
-          >
-            <span class="text-gray-500">结束时间：</span> {{ detail.procData.endTime || '-' }}
-          </a-col>
-          <a-col
-            :span="12"
-            class="mt-4"
-          >
-            <span class="text-gray-500">请假时长：</span> {{ detail.procData.duration || '-' }}
-          </a-col>
-          <a-col
-            :span="12"
-            class="mt-4"
-          >
-            <span class="text-gray-500">申请单位：</span> {{ detail.procData.applyUnit || '-' }}
-          </a-col>
-          <a-col
-            :span="12"
-            class="mt-4"
-          >
-            <span class="text-gray-500">申请事由：</span> {{ detail.procData.reason || '-' }}
-          </a-col>
-          <a-col
-            :span="12"
-            class="mt-4"
-          >
-            <span class="text-gray-500">审批状态：</span> 审批通过
-            <!-- {{ detail.procData.holidayType }} -->
-          </a-col>
-        </a-row>
-
-      </div>
-      <div class="right">
-        <a-timeline>
-          <a-timeline-item v-for="item in task">
-            <div class="text-base">
-              {{ item.handleUserName }} - {{ item.handleOpinion }}
-            </div>
-            <p class="text-xs text-gray-500">{{ item.handleTime }}</p>
-          </a-timeline-item>
-        </a-timeline>
-      </div>
+  <div>
+    <div class="bg-white p-2 flex">
+      <a-card
+        hoverable
+        style="width: 180px"
+        class="mr-4"
+      >
+        <a-statistic
+          title="当前审批中"
+          :value="data.currApproveCount"
+        />
+      </a-card>
+      <a-card
+        hoverable
+        style="width: 180px"
+        class="mr-4"
+      >
+        <a-statistic
+          title="本月审批通过"
+          :value="data.approveCount"
+        />
+      </a-card>
+      <a-card
+        hoverable
+        style="width: 180px"
+      >
+        <a-statistic
+          title="本月审批驳回"
+          :value="data.rejectionCount"
+        />
+      </a-card>
     </div>
-  </a-drawer>
+
+    <div class="bg-white p-2 mt-4">
+      <a-table
+        :columns="columns"
+        rowKey="id"
+        :data-source="data.rows"
+        :pagination="false"
+        :loading="loading"
+      >
+        <template #headerCell="{ column }">
+          <template v-if="column.key === 'processId'">
+            ID
+          </template>
+        </template>
+        <template #bodyCell="{ column, record }">
+          <template v-if="column.key === 'processState'">
+            <a-tag
+              color="yellow"
+              v-if="record.processState == 0"
+            >{{ processState(record.processState) }}</a-tag>
+            <a-tag
+              color="purple"
+              v-if="record.processState == 1"
+            >{{ processState(record.processState) }}</a-tag>
+            <a-tag
+              color="green"
+              v-else-if="record.processState == 2"
+            >{{ processState(record.processState) }}</a-tag>
+            <a-tag
+              color="red"
+              v-else-if="record.processState == 3 || record.processState == 4"
+            >{{ processState(record.processState) }}</a-tag>
+          </template>
+          <template v-if="column.key === 'action'">
+            <a-button
+              type="link"
+              @click="openDrawer(record)"
+            >详情</a-button>
+          </template>
+        </template>
+      </a-table>
+    </div>
+
+    <!-- 详情抽屉 -->
+    <a-drawer
+      v-model:open="open"
+      title="审批详情"
+      placement="right"
+      width="75%"
+    >
+      <div class="flex">
+        <div class="left pr-6">
+          <h1 class="text-base">申请人信息</h1>
+          <a-row class="my-6">
+            <a-col :span="12">
+              <span
+                class="text-gray-500"
+                style="padding-left: 27px;"
+              >姓名：</span> {{ detail.username }}
+            </a-col>
+            <a-col :span="12">
+              <span class="text-gray-500">部门：</span> {{ detail.departmentName }}
+            </a-col>
+            <a-col
+              :span="12"
+              class="mt-4"
+            >
+              <span class="text-gray-500">入职时间：</span> {{ detail.timeOfEntry }}
+            </a-col>
+          </a-row>
+
+          <a-divider />
+
+          <h1 class="text-base">请假申请</h1>
+          <a-row class="my-6">
+            <a-col :span="12">
+              <span class="text-gray-500">审批类型：</span> {{ detail.processName }}
+            </a-col>
+            <a-col :span="12">
+              <span class="text-gray-500">开始时间：</span> {{ detail.procData.startTime || '-' }}
+            </a-col>
+            <a-col
+              :span="12"
+              class="mt-4"
+            >
+              <span class="text-gray-500">休假类别：</span> {{ detail.procData.processName || '-' }}
+            </a-col>
+            <a-col
+              :span="12"
+              class="mt-4"
+            >
+              <span class="text-gray-500">结束时间：</span> {{ detail.procData.endTime || '-' }}
+            </a-col>
+            <a-col
+              :span="12"
+              class="mt-4"
+            >
+              <span class="text-gray-500">请假时长：</span> {{ detail.procData.duration || '-' }}
+            </a-col>
+            <a-col
+              :span="12"
+              class="mt-4"
+            >
+              <span class="text-gray-500">申请单位：</span> {{ detail.procData.applyUnit || '-' }}
+            </a-col>
+            <a-col
+              :span="12"
+              class="mt-4"
+            >
+              <span class="text-gray-500">申请事由：</span> {{ detail.procData.reason || '-' }}
+            </a-col>
+            <a-col
+              :span="12"
+              class="mt-4"
+            >
+              <span class="text-gray-500">审批状态：</span> 审批通过
+              <!-- {{ detail.procData.holidayType }} -->
+            </a-col>
+          </a-row>
+
+        </div>
+        <div class="right">
+          <a-timeline>
+            <a-timeline-item v-for="item in task">
+              <div class="text-base">
+                {{ item.handleUserName }} - {{ item.handleOpinion }}
+              </div>
+              <p class="text-xs text-gray-500">{{ item.handleTime }}</p>
+            </a-timeline-item>
+          </a-timeline>
+        </div>
+      </div>
+    </a-drawer>
+  </div>
 </template>
 
 <style lang="less" scoped>

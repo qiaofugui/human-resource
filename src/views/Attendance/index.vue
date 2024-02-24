@@ -168,64 +168,66 @@ const cancel = () => {
 </script>
 
 <template>
-  <div class="bg-white p-2">
-    <a-button
-      type="primary"
-      @click="()=>attendanceSettingOpen = true"
-    >设置</a-button>
-    <div class="mt-2 flex items-center">
-      <span class="text-base">部门：</span>
-      <a-cascader
-        v-model:value="checkOptions"
-        style="width: 300px"
-        multiple
-        :options="options"
-        placeholder="请选择部门筛选项"
-        :show-search="{ filter }"
-        :field-names="{ label: 'name', value: 'id', children: 'children' }"
-        max-tag-count="responsive"
-        @change="changeFilter"
-      ></a-cascader>
+  <div>
+    <div class="bg-white p-2">
+      <a-button
+        type="primary"
+        @click="()=>attendanceSettingOpen = true"
+      >设置</a-button>
+      <div class="mt-2 flex items-center">
+        <span class="text-base">部门：</span>
+        <a-cascader
+          v-model:value="checkOptions"
+          style="width: 300px"
+          multiple
+          :options="options"
+          placeholder="请选择部门筛选项"
+          :show-search="{ filter }"
+          :field-names="{ label: 'name', value: 'id', children: 'children' }"
+          max-tag-count="responsive"
+          @change="changeFilter"
+        ></a-cascader>
+      </div>
     </div>
-  </div>
-  <a-spin :spinning="spinning">
-    <div class="bg-white p-2 mt-4 w-full relative overflow-x-auto overflow-y-hidden">
-      <div style="width: 3000px;">
-        <table
-          border="0"
-          align="center"
-          cellpadding="0"
-          cellspacing="0"
-          class="tableInfo"
-        >
-          <tr>
-            <th width="30">序号</th>
-            <th width="100">姓名</th>
-            <th width="100">工号</th>
-            <th width="200">部门</th>
-            <th width="100">手机</th>
-            <th
-              v-for="(it, ind) in month"
-              :key="ind"
-              width="110"
-            >{{ tableData.monthOfReport }}/{{ ind + 1 }}</th>
-          </tr>
-          <tr
-            v-for="(item, index) in tableData?.data?.rows"
-            :key="item.id"
+
+    <a-spin :spinning="spinning">
+      <div class="bg-white p-2 mt-4 w-full relative overflow-x-auto overflow-y-hidden">
+        <div style="width: 3000px;">
+          <table
+            border="0"
+            align="center"
+            cellpadding="0"
+            cellspacing="0"
+            class="tableInfo"
           >
-            <td width="50">{{ index + 1 }}</td>
-            <td width="100">{{ item.username }}</td>
-            <td width="100">{{ item.workNumber }}</td>
-            <td width="200">{{ item.departmentName }}</td>
-            <td width="100">{{ item.mobile }}</td>
-            <td
-              v-for="(it,ind) in item.attendanceRecord"
-              :key="ind"
-              width="110"
-              @click="showChangeDialog(item,ind,it)"
-              class="cursor-pointer"
-              :class="{
+            <tr>
+              <th width="30">序号</th>
+              <th width="100">姓名</th>
+              <th width="100">工号</th>
+              <th width="200">部门</th>
+              <th width="100">手机</th>
+              <th
+                v-for="(it, ind) in month"
+                :key="ind"
+                width="110"
+              >{{ tableData.monthOfReport }}/{{ ind + 1 }}</th>
+            </tr>
+            <tr
+              v-for="(item, index) in tableData?.data?.rows"
+              :key="item.id"
+            >
+              <td width="50">{{ index + 1 }}</td>
+              <td width="100">{{ item.username }}</td>
+              <td width="100">{{ item.workNumber }}</td>
+              <td width="200">{{ item.departmentName }}</td>
+              <td width="100">{{ item.mobile }}</td>
+              <td
+                v-for="(it,ind) in item.attendanceRecord"
+                :key="ind"
+                width="110"
+                @click="showChangeDialog(item,ind,it)"
+                class="cursor-pointer"
+                :class="{
                 'bg-green-500': it.adtStatu === 1,
                 'bg-red-500': it.adtStatu === 2,
                 'bg-yellow-500': it.adtStatu === 3,
@@ -238,87 +240,88 @@ const cancel = () => {
                 'bg-gray-400': it.adtStatu === 21,
                 'bg-gray-300': it.adtStatu === 22,
               }"
-            >
-              <a-popover placement="top">
-                <template #title>
-                  <div
-                    class="flex justify-between"
-                    style="width: 260px"
-                  >
-                    <span>{{ item.username + '-' + it.day + '-考勤记录' }}</span>
-                    <span>
-                      <a-tag
-                        color="green"
-                        v-if="it.adtStatu === 1"
-                      >{{ getVacationType(it.adtStatu) }}</a-tag>
-                      <a-tag
-                        color="red"
-                        v-else-if="it.adtStatu === 2"
-                      >{{ getVacationType(it.adtStatu) }}</a-tag>
-                      <a-tag
-                        color="orange"
-                        v-else-if="it.adtStatu === 3 || it.adtStatu === 4"
-                      >{{ getVacationType(it.adtStatu) }}</a-tag>
-                      <a-tag
-                        color="blue"
-                        v-else-if="it.adtStatu === 5 || it.adtStatu === 6 || it.adtStatu === 7"
-                      >{{ getVacationType(it.adtStatu) }}</a-tag>
-                      <a-tag
-                        color="purple"
-                        v-else-if="it.adtStatu === 8 || it.adtStatu === 9 || it.adtStatu === 10 || it.adtStatu === 11 || it.adtStatu === 12 || it.adtStatu === 13 || it.adtStatu === 14 || it.adtStatu === 15 || it.adtStatu === 16 || it.adtStatu === 18 || it.adtStatu === 19 || it.adtStatu === 20"
-                      >{{ getVacationType(it.adtStatu) }}</a-tag>
-                      <a-tag v-else-if="it.adtStatu === 17 || it.adtStatu === 21 || it.adtStatu === 22">{{ getVacationType(it.adtStatu) }}</a-tag>
-                    </span>
-                  </div>
-                </template>
-                <template #content>
-                  <p>上班打卡时间：{{ it.adtInTime || '-' }}</p>
-                  <p>上班打卡地点：{{ '-' }}</p>
-                  <p>下班打卡时间：{{ it.adtOutTime || '-' }}</p>
-                  <p>下班打卡地点：{{ '-' }}</p>
-                </template>
-                <span class="py-2 px-5">{{ getVacationType(it.adtStatu) }}</span>
-              </a-popover>
-            </td>
-          </tr>
-        </table>
+              >
+                <a-popover placement="top">
+                  <template #title>
+                    <div
+                      class="flex justify-between"
+                      style="width: 260px"
+                    >
+                      <span>{{ item.username + '-' + it.day + '-考勤记录' }}</span>
+                      <span>
+                        <a-tag
+                          color="green"
+                          v-if="it.adtStatu === 1"
+                        >{{ getVacationType(it.adtStatu) }}</a-tag>
+                        <a-tag
+                          color="red"
+                          v-else-if="it.adtStatu === 2"
+                        >{{ getVacationType(it.adtStatu) }}</a-tag>
+                        <a-tag
+                          color="orange"
+                          v-else-if="it.adtStatu === 3 || it.adtStatu === 4"
+                        >{{ getVacationType(it.adtStatu) }}</a-tag>
+                        <a-tag
+                          color="blue"
+                          v-else-if="it.adtStatu === 5 || it.adtStatu === 6 || it.adtStatu === 7"
+                        >{{ getVacationType(it.adtStatu) }}</a-tag>
+                        <a-tag
+                          color="purple"
+                          v-else-if="it.adtStatu === 8 || it.adtStatu === 9 || it.adtStatu === 10 || it.adtStatu === 11 || it.adtStatu === 12 || it.adtStatu === 13 || it.adtStatu === 14 || it.adtStatu === 15 || it.adtStatu === 16 || it.adtStatu === 18 || it.adtStatu === 19 || it.adtStatu === 20"
+                        >{{ getVacationType(it.adtStatu) }}</a-tag>
+                        <a-tag v-else-if="it.adtStatu === 17 || it.adtStatu === 21 || it.adtStatu === 22">{{ getVacationType(it.adtStatu) }}</a-tag>
+                      </span>
+                    </div>
+                  </template>
+                  <template #content>
+                    <p>上班打卡时间：{{ it.adtInTime || '-' }}</p>
+                    <p>上班打卡地点：{{ '-' }}</p>
+                    <p>下班打卡时间：{{ it.adtOutTime || '-' }}</p>
+                    <p>下班打卡地点：{{ '-' }}</p>
+                  </template>
+                  <span class="py-2 px-5">{{ getVacationType(it.adtStatu) }}</span>
+                </a-popover>
+              </td>
+            </tr>
+          </table>
+        </div>
       </div>
-    </div>
-    <div class="flex justify-end p-2 bg-white">
-      <a-pagination
-        v-model:current="params.page"
-        v-model:page-size="params.pagesize"
-        show-quick-jumper
-        :total="tableData?.data?.total"
-        :show-total="total => `共 ${total} 条`"
-        @change="changeSize"
+      <div class="flex justify-end p-2 bg-white">
+        <a-pagination
+          v-model:current="params.page"
+          v-model:page-size="params.pagesize"
+          show-quick-jumper
+          :total="tableData?.data?.total"
+          :show-total="total => `共 ${total} 条`"
+          @change="changeSize"
+        />
+      </div>
+    </a-spin>
+
+    <!-- 更改考勤记录弹窗 -->
+    <a-modal
+      v-model:open="attendanceOpen"
+      @ok="attendanceOk"
+      :destroyOnClose="true"
+      :confirm-loading="attendanceModalLoading"
+    >
+      <template #title>
+        {{ attendanceObj.day }}（实际工作日考勤方案）
+      </template>
+      <a-radio-group
+        v-model:value="attendanceValue"
+        :options="attendanceChangeType"
       />
-    </div>
-  </a-spin>
+    </a-modal>
 
-  <!-- 更改考勤记录弹窗 -->
-  <a-modal
-    v-model:open="attendanceOpen"
-    @ok="attendanceOk"
-    :destroyOnClose="true"
-    :confirm-loading="attendanceModalLoading"
-  >
-    <template #title>
-      {{ attendanceObj.day }}（实际工作日考勤方案）
-    </template>
-    <a-radio-group
-      v-model:value="attendanceValue"
-      :options="attendanceChangeType"
+    <!-- 考勤设置 -->
+    <AttendanceSetting
+      v-if="options.length && resetAttendance"
+      v-model:open="attendanceSettingOpen"
+      :department="options"
+      @cancel="cancel"
     />
-  </a-modal>
-
-  <!-- 考勤设置 -->
-  <AttendanceSetting
-    v-if="options.length && resetAttendance"
-    v-model:open="attendanceSettingOpen"
-    :department="options"
-    @cancel="cancel"
-  />
+  </div>
 </template>
 
 <style lang="less" scoped>

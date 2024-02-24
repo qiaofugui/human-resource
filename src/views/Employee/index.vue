@@ -243,182 +243,184 @@ const okRole = async () => {
 </script>
 
 <template>
-  <div class="flex w-full bg-white">
-    <div class="left p-2">
-      <a-spin :spinning="treeSpinning">
-        <a-input-search
-          v-model:value="params.keyword"
-          placeholder="输入员工姓名搜索"
-          enter-button
-          @search="onSelect"
-          class="mb-2"
-        />
-        <a-tree
-          :autoExpandParent="true"
-          :tree-data="treeData"
-          :field-names="fieldNames"
-          :defaultExpandAll="true"
-          v-if="treeData.length"
-          block-node
-          @select="onSelect"
-        >
-          <template #title="{ id: key, name, managerName, code, introduce, managerId, pid, createTime }">
-            {{ name }}
-          </template>
-        </a-tree>
-      </a-spin>
-    </div>
-    <div class="right p-2">
-      <a-spin :spinning="spinning">
-        <a-space class="mb-2">
-          <a-button @click="openNotice">群发通知</a-button>
-          <a-button
-            type="primary"
-            @click="openModal('add')"
+  <div>
+    <div class="flex w-full bg-white">
+      <div class="left p-2">
+        <a-spin :spinning="treeSpinning">
+          <a-input-search
+            v-model:value="params.keyword"
+            placeholder="输入员工姓名搜索"
+            enter-button
+            @search="onSelect"
+            class="mb-2"
+          />
+          <a-tree
+            :autoExpandParent="true"
+            :tree-data="treeData"
+            :field-names="fieldNames"
+            :defaultExpandAll="true"
+            v-if="treeData.length"
+            block-node
+            @select="onSelect"
           >
-            <PlusOutlined /> 添加员工
-          </a-button>
-        </a-space>
-        <a-table
-          :row-selection="rowSelection"
-          :columns="columns"
-          :data-source="employeeData"
-          :scroll="{ x: 1100 }"
-          :pagination="false"
-          rowKey="id"
-        >
-          <template #bodyCell="{ column, record }">
-            <template v-if="column.key === 'staffPhoto'">
-              <a-avatar
-                class="my-avatar"
-                :src="record.staffPhoto"
-                v-if="record.staffPhoto"
-              ></a-avatar>
-              <a-avatar
-                class="my-avatar"
-                v-else
-              >{{ record.username.charAt(0) }}</a-avatar>
+            <template #title="{ id: key, name, managerName, code, introduce, managerId, pid, createTime }">
+              {{ name }}
             </template>
+          </a-tree>
+        </a-spin>
+      </div>
+      <div class="right p-2">
+        <a-spin :spinning="spinning">
+          <a-space class="mb-2">
+            <a-button @click="openNotice">群发通知</a-button>
+            <a-button
+              type="primary"
+              @click="openModal('add')"
+            >
+              <PlusOutlined /> 添加员工
+            </a-button>
+          </a-space>
+          <a-table
+            :row-selection="rowSelection"
+            :columns="columns"
+            :data-source="employeeData"
+            :scroll="{ x: 1100 }"
+            :pagination="false"
+            rowKey="id"
+          >
+            <template #bodyCell="{ column, record }">
+              <template v-if="column.key === 'staffPhoto'">
+                <a-avatar
+                  class="my-avatar"
+                  :src="record.staffPhoto"
+                  v-if="record.staffPhoto"
+                ></a-avatar>
+                <a-avatar
+                  class="my-avatar"
+                  v-else
+                >{{ record.username.charAt(0) }}</a-avatar>
+              </template>
 
-            <template v-if="column.key === 'formOfEmployment'">
-              <span v-if="record.formOfEmployment === 1">正式</span>
-              <span v-else="record.formOfEmployment === 2">非正式</span>
-            </template>
+              <template v-if="column.key === 'formOfEmployment'">
+                <span v-if="record.formOfEmployment === 1">正式</span>
+                <span v-else="record.formOfEmployment === 2">非正式</span>
+              </template>
 
-            <template v-if="column.key === 'action'">
-              <a-button
-                type="link"
-                size="small"
-                @click="openModal('update', record)"
-              >编辑</a-button>
-              <a-button
-                type="link"
-                size="small"
-                @click="openRole(record)"
-              >角色</a-button>
-              <a-popconfirm
-                placement="bottom"
-                ok-text="删除"
-                cancel-text="取消"
-                @confirm="deleteEmployee(record)"
-              >
-                <template #title>
-                  <div>确定要删除 <span class="font-bold">{{ record.username }}</span> 吗?</div>
-                </template>
+              <template v-if="column.key === 'action'">
                 <a-button
                   type="link"
                   size="small"
-                >删除</a-button>
-              </a-popconfirm>
+                  @click="openModal('update', record)"
+                >编辑</a-button>
+                <a-button
+                  type="link"
+                  size="small"
+                  @click="openRole(record)"
+                >角色</a-button>
+                <a-popconfirm
+                  placement="bottom"
+                  ok-text="删除"
+                  cancel-text="取消"
+                  @confirm="deleteEmployee(record)"
+                >
+                  <template #title>
+                    <div>确定要删除 <span class="font-bold">{{ record.username }}</span> 吗?</div>
+                  </template>
+                  <a-button
+                    type="link"
+                    size="small"
+                  >删除</a-button>
+                </a-popconfirm>
+              </template>
             </template>
-          </template>
-        </a-table>
-        <div class="flex justify-end p-2">
-          <a-pagination
-            v-model:current="params.page"
-            v-model:page-size="params.pagesize"
-            show-quick-jumper
-            :total="total"
-            :show-total="total => `共 ${total} 条`"
-            @change="changeSize"
-          />
-        </div>
-      </a-spin>
+          </a-table>
+          <div class="flex justify-end p-2">
+            <a-pagination
+              v-model:current="params.page"
+              v-model:page-size="params.pagesize"
+              show-quick-jumper
+              :total="total"
+              :show-total="total => `共 ${total} 条`"
+              @change="changeSize"
+            />
+          </div>
+        </a-spin>
+      </div>
     </div>
-  </div>
 
-  <!-- 群发通知 -->
-  <a-modal
-    v-model:open="openNoticeVisible"
-    title="群发通知"
-    @ok="sendNotice"
-    @cancel="sendFormRef.resetFields()"
-    :destroyOnClose="true"
-    :confirm-loading="noticeModalLoading"
-  >
-    <a-card class="mb-2">
-      <a-tag
-        class="mb-2"
-        :closable="checkRows.length === 1 ? false : true"
-        @close="closeTag(item.id)"
-        color="purple"
-        v-for="item in checkRows"
-        :key="item.id"
-      >@{{ item.username }}</a-tag>
-    </a-card>
-    <a-form
-      ref="sendFormRef"
-      :model="sendForm"
-      :rules="sendRules"
+    <!-- 群发通知 -->
+    <a-modal
+      v-model:open="openNoticeVisible"
+      title="群发通知"
+      @ok="sendNotice"
+      @cancel="sendFormRef.resetFields()"
+      :destroyOnClose="true"
+      :confirm-loading="noticeModalLoading"
     >
-      <a-form-item
-        label="消息等级"
-        name="type"
-        has-feedback
+      <a-card class="mb-2">
+        <a-tag
+          class="mb-2"
+          :closable="checkRows.length === 1 ? false : true"
+          @close="closeTag(item.id)"
+          color="purple"
+          v-for="item in checkRows"
+          :key="item.id"
+        >@{{ item.username }}</a-tag>
+      </a-card>
+      <a-form
+        ref="sendFormRef"
+        :model="sendForm"
+        :rules="sendRules"
       >
-        <a-select
-          v-model:value="sendForm.type"
-          :options="noticeType"
-        ></a-select>
-      </a-form-item>
-      <a-form-item
-        label="通知内容"
-        name="content"
-        has-feedback
-      >
-        <a-textarea
-          v-model:value="sendForm.content"
-          placeholder="请输入通知内容"
-          show-count
-          :maxlength="100"
-          :rows="3"
-        />
-      </a-form-item>
-    </a-form>
-  </a-modal>
+        <a-form-item
+          label="消息等级"
+          name="type"
+          has-feedback
+        >
+          <a-select
+            v-model:value="sendForm.type"
+            :options="noticeType"
+          ></a-select>
+        </a-form-item>
+        <a-form-item
+          label="通知内容"
+          name="content"
+          has-feedback
+        >
+          <a-textarea
+            v-model:value="sendForm.content"
+            placeholder="请输入通知内容"
+            show-count
+            :maxlength="100"
+            :rows="3"
+          />
+        </a-form-item>
+      </a-form>
+    </a-modal>
 
-  <UserInfo
-    v-model:treeData="treeData"
-    v-model:type="type"
-    v-model:open="open"
-    v-model:formState="formState"
-    @onSelect="onSelect"
-    @cancel="cancel"
-  />
-
-  <!-- 角色 -->
-  <a-modal
-    v-model:open="openRoleVisible"
-    title="分配角色"
-    @ok="okRole"
-    :destroyOnClose="true"
-    :confirm-loading="roleModalLoading"
-  >
-    <a-checkbox-group
-      v-model:value="checkRoleList"
-      :options="roleList"
+    <UserInfo
+      v-model:treeData="treeData"
+      v-model:type="type"
+      v-model:open="open"
+      v-model:formState="formState"
+      @onSelect="onSelect"
+      @cancel="cancel"
     />
-  </a-modal>
+
+    <!-- 角色 -->
+    <a-modal
+      v-model:open="openRoleVisible"
+      title="分配角色"
+      @ok="okRole"
+      :destroyOnClose="true"
+      :confirm-loading="roleModalLoading"
+    >
+      <a-checkbox-group
+        v-model:value="checkRoleList"
+        :options="roleList"
+      />
+    </a-modal>
+  </div>
 </template>
 
 <style lang="less" scoped>

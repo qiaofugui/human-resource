@@ -169,184 +169,186 @@ const updateRolePermission = async () => {
 </script>
 
 <template>
-  <div class="bg-white p-2 h-full">
-    <a-spin :spinning="spinning">
-      <a-button
-        type="primary"
-        @click="openAdd"
-        class="mb-2"
-      >
-        <PlusOutlined /> 添加角色
-      </a-button>
-      <a-table
-        :columns="columns"
-        :data-source="roleData"
-        :pagination="false"
-        :row-class-name="(_record, index) => (index % 2 === 1 ? 'table-striped' : null)"
-      >
-        <template #headerCell="{ column }">
-          <template v-if="column.key === 'id'">
-            ID
+  <div>
+    <div class="bg-white p-2 h-full">
+      <a-spin :spinning="spinning">
+        <a-button
+          type="primary"
+          @click="openAdd"
+          class="mb-2"
+        >
+          <PlusOutlined /> 添加角色
+        </a-button>
+        <a-table
+          :columns="columns"
+          :data-source="roleData"
+          :pagination="false"
+          :row-class-name="(_record, index) => (index % 2 === 1 ? 'table-striped' : null)"
+        >
+          <template #headerCell="{ column }">
+            <template v-if="column.key === 'id'">
+              ID
+            </template>
           </template>
-        </template>
 
-        <template #bodyCell="{ column, record }">
-          <template v-if="column.key === 'name'">
-            <div v-if="record.isEdit">
-              <a-input
-                v-model:value="record.name"
-                placeholder="请输入角色名称"
-                size="small"
-              />
-            </div>
-            <div v-else>{{ record.name }}</div>
-          </template>
-          <template v-else-if="column.key === 'state'">
-            <div v-if="record.isEdit">
-              <a-switch v-model:checked="record.state" />
-            </div>
-            <div v-else>{{ record.state ? '已启用' : '未启用' }}</div>
-          </template>
-          <template v-else-if="column.key === 'description'">
-            <div v-if="record.isEdit">
-              <a-input
-                v-model:value="record.description"
-                placeholder="请输入角色描述"
-                show-count
-                :maxlength="100"
-                :rows="1"
-                size="small"
-              />
-            </div>
-            <div v-else>{{ record.description }}</div>
-          </template>
-          <template v-else-if="column.key === 'action'">
-            <div v-if="!record.isEdit">
-              <a-button
-                type="link"
-                size="small"
-                @click="openAllocation(record)"
-              >分配权限</a-button>
-              <a-button
-                type="link"
-                size="small"
-                @click="() => record.isEdit = true"
-              >编辑</a-button>
-              <a-popconfirm
-                placement="bottom"
-                ok-text="删除"
-                cancel-text="取消"
-                @confirm="deleteRole(record)"
-              >
-                <template #title>
-                  <div>确定要删除 <span class="font-bold">{{ record.name }}</span> 吗?</div>
-                </template>
+          <template #bodyCell="{ column, record }">
+            <template v-if="column.key === 'name'">
+              <div v-if="record.isEdit">
+                <a-input
+                  v-model:value="record.name"
+                  placeholder="请输入角色名称"
+                  size="small"
+                />
+              </div>
+              <div v-else>{{ record.name }}</div>
+            </template>
+            <template v-else-if="column.key === 'state'">
+              <div v-if="record.isEdit">
+                <a-switch v-model:checked="record.state" />
+              </div>
+              <div v-else>{{ record.state ? '已启用' : '未启用' }}</div>
+            </template>
+            <template v-else-if="column.key === 'description'">
+              <div v-if="record.isEdit">
+                <a-input
+                  v-model:value="record.description"
+                  placeholder="请输入角色描述"
+                  show-count
+                  :maxlength="100"
+                  :rows="1"
+                  size="small"
+                />
+              </div>
+              <div v-else>{{ record.description }}</div>
+            </template>
+            <template v-else-if="column.key === 'action'">
+              <div v-if="!record.isEdit">
                 <a-button
                   type="link"
                   size="small"
-                >删除</a-button>
-              </a-popconfirm>
-            </div>
-            <div v-else>
-              <a-button
-                type="link"
-                size="small"
-                @click="updateRole(record)"
-              >完成</a-button>
-              <a-button
-                type="link"
-                size="small"
-                @click="() => record.isEdit = false"
-              >取消</a-button>
-            </div>
+                  @click="openAllocation(record)"
+                >分配权限</a-button>
+                <a-button
+                  type="link"
+                  size="small"
+                  @click="() => record.isEdit = true"
+                >编辑</a-button>
+                <a-popconfirm
+                  placement="bottom"
+                  ok-text="删除"
+                  cancel-text="取消"
+                  @confirm="deleteRole(record)"
+                >
+                  <template #title>
+                    <div>确定要删除 <span class="font-bold">{{ record.name }}</span> 吗?</div>
+                  </template>
+                  <a-button
+                    type="link"
+                    size="small"
+                  >删除</a-button>
+                </a-popconfirm>
+              </div>
+              <div v-else>
+                <a-button
+                  type="link"
+                  size="small"
+                  @click="updateRole(record)"
+                >完成</a-button>
+                <a-button
+                  type="link"
+                  size="small"
+                  @click="() => record.isEdit = false"
+                >取消</a-button>
+              </div>
+            </template>
           </template>
+        </a-table>
+        <div class="flex justify-end p-2">
+          <a-pagination
+            v-model:current="params.page"
+            v-model:page-size="params.pageSize"
+            show-quick-jumper
+            :total="total"
+            :show-total="total => `共 ${total} 条`"
+            @change="changeSize"
+          />
+        </div>
+      </a-spin>
+    </div>
+
+    <!-- 添加角色 -->
+    <a-modal
+      v-model:open="openAddVisible"
+      title="添加角色"
+      @ok="addRole"
+      @cancel="addFormRef.resetFields()"
+      :destroyOnClose="true"
+      :confirm-loading="addModalLoading"
+    >
+      <a-form
+        ref="addFormRef"
+        :model="addForm"
+        :rules="addRules"
+        :label-col="{ style: { width: '100px' } }"
+      >
+        <a-form-item
+          label="角色名称"
+          name="name"
+          has-feedback
+        >
+          <a-input
+            v-model:value="addForm.name"
+            placeholder="请输入角色名称"
+          />
+        </a-form-item>
+        <a-form-item
+          label="启用状态"
+          name="state"
+          has-feedback
+        >
+          <a-switch v-model:checked="addForm.state" />
+        </a-form-item>
+        <a-form-item
+          label="角色描述"
+          name="description"
+          has-feedback
+        >
+          <a-textarea
+            v-model:value="addForm.description"
+            placeholder="请输入角色描述"
+            show-count
+            :maxlength="100"
+            :rows="3"
+          />
+        </a-form-item>
+      </a-form>
+    </a-modal>
+
+    <!-- 分配权限 -->
+    <a-modal
+      v-model:open="openAllocationVisible"
+      title="分配权限"
+      @ok="updateRolePermission"
+      :destroyOnClose="true"
+      :confirm-loading="allocationModalLoading"
+    >
+      <a-tree
+        v-if="roleTree.length"
+        v-model:checkedKeys="checkedKeys"
+        checkable
+        autoExpandParent
+        checkStrictly
+        :tree-data="roleTree"
+        :field-names="fieldNames"
+        ref="treeRef"
+        defaultExpandAll
+      >
+        <template #title="{ name, id }">
+          {{ name }}
         </template>
-      </a-table>
-      <div class="flex justify-end p-2">
-        <a-pagination
-          v-model:current="params.page"
-          v-model:page-size="params.pageSize"
-          show-quick-jumper
-          :total="total"
-          :show-total="total => `共 ${total} 条`"
-          @change="changeSize"
-        />
-      </div>
-    </a-spin>
+      </a-tree>
+    </a-modal>
   </div>
-
-  <!-- 添加角色 -->
-  <a-modal
-    v-model:open="openAddVisible"
-    title="添加角色"
-    @ok="addRole"
-    @cancel="addFormRef.resetFields()"
-    :destroyOnClose="true"
-    :confirm-loading="addModalLoading"
-  >
-    <a-form
-      ref="addFormRef"
-      :model="addForm"
-      :rules="addRules"
-      :label-col="{ style: { width: '100px' } }"
-    >
-      <a-form-item
-        label="角色名称"
-        name="name"
-        has-feedback
-      >
-        <a-input
-          v-model:value="addForm.name"
-          placeholder="请输入角色名称"
-        />
-      </a-form-item>
-      <a-form-item
-        label="启用状态"
-        name="state"
-        has-feedback
-      >
-        <a-switch v-model:checked="addForm.state" />
-      </a-form-item>
-      <a-form-item
-        label="角色描述"
-        name="description"
-        has-feedback
-      >
-        <a-textarea
-          v-model:value="addForm.description"
-          placeholder="请输入角色描述"
-          show-count
-          :maxlength="100"
-          :rows="3"
-        />
-      </a-form-item>
-    </a-form>
-  </a-modal>
-
-  <!-- 分配权限 -->
-  <a-modal
-    v-model:open="openAllocationVisible"
-    title="分配权限"
-    @ok="updateRolePermission"
-    :destroyOnClose="true"
-    :confirm-loading="allocationModalLoading"
-  >
-    <a-tree
-      v-if="roleTree.length"
-      v-model:checkedKeys="checkedKeys"
-      checkable
-      autoExpandParent
-      checkStrictly
-      :tree-data="roleTree"
-      :field-names="fieldNames"
-      ref="treeRef"
-      defaultExpandAll
-    >
-      <template #title="{ name, id }">
-        {{ name }}
-      </template>
-    </a-tree>
-  </a-modal>
 </template>
 
 <style lang="less" scoped>

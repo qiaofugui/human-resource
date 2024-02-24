@@ -187,215 +187,217 @@ const cancel = () => {
 </script>
 
 <template>
-  <div class="bg-white p-2">
-    <a-button
-      type="primary"
-      @click="salarySettingOpen = true"
-    >设置</a-button>
-    <div class="mt-2 flex items-center">
-      <div class="flex items-center">
-        <span
-          class="text-base"
-          style="width: 80px"
-        >聘用形式：</span>
-        <a-cascader
-          v-model:value="checkEmployment"
-          style="width: 300px"
-          multiple
-          :options="[{ name: '正式', id: 1 }, { name: '非正式', id: 2 }]"
-          placeholder="请选择聘用形式筛选项"
-          :show-search="{ filter }"
-          :field-names="{ label: 'name', value: 'id', children: 'children' }"
-          max-tag-count="responsive"
-          @change="changeFilter"
-        ></a-cascader>
-      </div>
-      <div class="flex items-center">
-        <span
-          class="text-base text-right"
-          style="width: 80px"
-        >部门：</span>
-        <a-cascader
-          v-model:value="checkOptions"
-          style="width: 300px"
-          multiple
-          :options="options"
-          placeholder="请选择部门筛选项"
-          :show-search="{ filter }"
-          :field-names="{ label: 'name', value: 'id', children: 'children' }"
-          max-tag-count="responsive"
-          @change="changeFilter"
-        ></a-cascader>
+  <div>
+    <div class="bg-white p-2">
+      <a-button
+        type="primary"
+        @click="salarySettingOpen = true"
+      >设置</a-button>
+      <div class="mt-2 flex items-center">
+        <div class="flex items-center">
+          <span
+            class="text-base"
+            style="width: 80px"
+          >聘用形式：</span>
+          <a-cascader
+            v-model:value="checkEmployment"
+            style="width: 300px"
+            multiple
+            :options="[{ name: '正式', id: 1 }, { name: '非正式', id: 2 }]"
+            placeholder="请选择聘用形式筛选项"
+            :show-search="{ filter }"
+            :field-names="{ label: 'name', value: 'id', children: 'children' }"
+            max-tag-count="responsive"
+            @change="changeFilter"
+          ></a-cascader>
+        </div>
+        <div class="flex items-center">
+          <span
+            class="text-base text-right"
+            style="width: 80px"
+          >部门：</span>
+          <a-cascader
+            v-model:value="checkOptions"
+            style="width: 300px"
+            multiple
+            :options="options"
+            placeholder="请选择部门筛选项"
+            :show-search="{ filter }"
+            :field-names="{ label: 'name', value: 'id', children: 'children' }"
+            max-tag-count="responsive"
+            @change="changeFilter"
+          ></a-cascader>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="mt-4 p-2 bg-white">
-    <a-table
-      :columns="columns"
-      rowKey="id"
-      :data-source="data.rows"
-      :pagination="false"
-      :loading="loading"
-      :scroll="{ x: 1100 }"
-    >
-      <template #headerCell="{ column }">
-        <template v-if="column.key === 'id'">
-          ID
+    <div class="mt-4 p-2 bg-white">
+      <a-table
+        :columns="columns"
+        rowKey="id"
+        :data-source="data.rows"
+        :pagination="false"
+        :loading="loading"
+        :scroll="{ x: 1100 }"
+      >
+        <template #headerCell="{ column }">
+          <template v-if="column.key === 'id'">
+            ID
+          </template>
         </template>
-      </template>
-      <template #bodyCell="{ column, record, index }">
-        <template v-if="column.key === 'id'">
-          {{ index + 1 }}
-        </template>
-        <template v-if="column.key === 'formOfEmployment'">
-          {{ record.formOfEmployment == 1 ? '正式' : '非正式' }}
-        </template>
-        <template v-if="column.key === 'action'">
-          <!-- <a-button
+        <template #bodyCell="{ column, record, index }">
+          <template v-if="column.key === 'id'">
+            {{ index + 1 }}
+          </template>
+          <template v-if="column.key === 'formOfEmployment'">
+            {{ record.formOfEmployment == 1 ? '正式' : '非正式' }}
+          </template>
+          <template v-if="column.key === 'action'">
+            <!-- <a-button
             type="link"
             @click=""
           >详情</a-button> -->
-          <a-button
-            type="link"
-            @click="getSalaryAdjustDetail(record)"
-          >调薪</a-button>
+            <a-button
+              type="link"
+              @click="getSalaryAdjustDetail(record)"
+            >调薪</a-button>
+          </template>
         </template>
-      </template>
-    </a-table>
-    <div class="flex justify-end p-2 bg-white">
-      <a-pagination
-        v-model:current="params.page"
-        v-model:page-size="params.pagesize"
-        show-quick-jumper
-        :total="data?.total"
-        :show-total="total => `共 ${total} 条`"
-        @change="changeSize"
-      />
-    </div>
-  </div>
-
-  <!-- 调整薪水 -->
-  <a-modal
-    v-model:open="adjustSalaryVisible"
-    title="调整薪水"
-    @ok="adjustSalaryOk"
-    :destroyOnClose="true"
-    @cancel="adjustSalaryCancel"
-  >
-    <a-card title="基本信息">
-      <a-row>
-        <a-col :span="12"><span
-            class="inline-block text-right leading-snug"
-            style="width: 70px;"
-          >姓名：</span>{{ currentSalary.username }}</a-col>
-        <a-col :span="12"><span
-            class="inline-block text-right leading-snug"
-            style="width: 70px;"
-          >部门：</span>{{ currentSalary.departmentName }}</a-col>
-        <a-col :span="12"><span
-            class="inline-block text-right leading-snug"
-            style="width: 70px;"
-          >手机号：</span>{{ currentSalary.mobile }}</a-col>
-        <a-col :span="12"><span
-            class="inline-block text-right leading-snug"
-            style="width: 70px;"
-          >入职时间：</span>{{ currentSalary.timeOfEntry }}</a-col>
-      </a-row>
-    </a-card>
-
-    <a-divider />
-
-    <a-form
-      ref="adjustSalaryFormRef"
-      :model="adjustSalaryForm"
-      :rules="adjustSalaryRules"
-      :label-col="{ style: { width: '110px' } }"
-    >
-      <a-form-item
-        label="调整基本工资"
-        name="currentBasicSalary"
-      >
-        <div class="flex items-center">
-          <a-form-item-rest>
-            <a-input
-              :value="adjustSalary.currentBasicSalary"
-              disabled
-              style="width: 40%"
-            />
-          </a-form-item-rest>
-          <div
-            style="width: 10%;"
-            class="text-center"
-          > {{ '-->' }}</div>
-          <a-input
-            v-model:value="adjustSalaryForm.currentBasicSalary"
-            type="number"
-            style="width: 40%;"
-            placeholder="调整后基本工资"
-          />
-        </div>
-      </a-form-item>
-      <a-form-item
-        label="调整岗位工资"
-        name="currentPostWage"
-      >
-        <div class="flex items-center">
-          <a-form-item-rest>
-            <a-input
-              :value="adjustSalary.currentPostWage"
-              disabled
-              style="width: 40%"
-            />
-          </a-form-item-rest>
-          <div
-            style="width: 10%;"
-            class="text-center"
-          > {{ '-->' }}</div>
-          <a-input
-            v-model:value="adjustSalaryForm.currentPostWage"
-            type="number"
-            style="width: 40%;"
-            placeholder="调整后岗位工资"
-          />
-        </div>
-      </a-form-item>
-      <a-form-item label="工资合计">
-        <div class="flex items-center">
-          <a-input
-            :value="summation.currentTotal"
-            disabled
-            style="width: 40%"
-          />
-          <div
-            style="width: 10%;"
-            class="text-center"
-          > {{ '-->' }}</div>
-          <a-input
-            :value="summation.afterTotal"
-            type="number"
-            style="width: 40%;"
-            disabled
-            placeholder="工资合计"
-          />
-        </div>
-      </a-form-item>
-      <a-form-item label="调整幅度">
-        <a-input
-          :value="summation.adjustRange"
-          style="width: 90%;"
-          disabled
+      </a-table>
+      <div class="flex justify-end p-2 bg-white">
+        <a-pagination
+          v-model:current="params.page"
+          v-model:page-size="params.pagesize"
+          show-quick-jumper
+          :total="data?.total"
+          :show-total="total => `共 ${total} 条`"
+          @change="changeSize"
         />
-      </a-form-item>
-    </a-form>
-  </a-modal>
+      </div>
+    </div>
 
-  <!-- 工资设置 -->
-  <SalarySetting
-    v-if="resetSalary"
-    v-model:open="salarySettingOpen"
-    @cancel="cancel"
-  />
+    <!-- 调整薪水 -->
+    <a-modal
+      v-model:open="adjustSalaryVisible"
+      title="调整薪水"
+      @ok="adjustSalaryOk"
+      :destroyOnClose="true"
+      @cancel="adjustSalaryCancel"
+    >
+      <a-card title="基本信息">
+        <a-row>
+          <a-col :span="12"><span
+              class="inline-block text-right leading-snug"
+              style="width: 70px;"
+            >姓名：</span>{{ currentSalary.username }}</a-col>
+          <a-col :span="12"><span
+              class="inline-block text-right leading-snug"
+              style="width: 70px;"
+            >部门：</span>{{ currentSalary.departmentName }}</a-col>
+          <a-col :span="12"><span
+              class="inline-block text-right leading-snug"
+              style="width: 70px;"
+            >手机号：</span>{{ currentSalary.mobile }}</a-col>
+          <a-col :span="12"><span
+              class="inline-block text-right leading-snug"
+              style="width: 70px;"
+            >入职时间：</span>{{ currentSalary.timeOfEntry }}</a-col>
+        </a-row>
+      </a-card>
+
+      <a-divider />
+
+      <a-form
+        ref="adjustSalaryFormRef"
+        :model="adjustSalaryForm"
+        :rules="adjustSalaryRules"
+        :label-col="{ style: { width: '110px' } }"
+      >
+        <a-form-item
+          label="调整基本工资"
+          name="currentBasicSalary"
+        >
+          <div class="flex items-center">
+            <a-form-item-rest>
+              <a-input
+                :value="adjustSalary.currentBasicSalary"
+                disabled
+                style="width: 40%"
+              />
+            </a-form-item-rest>
+            <div
+              style="width: 10%;"
+              class="text-center"
+            > {{ '-->' }}</div>
+            <a-input
+              v-model:value="adjustSalaryForm.currentBasicSalary"
+              type="number"
+              style="width: 40%;"
+              placeholder="调整后基本工资"
+            />
+          </div>
+        </a-form-item>
+        <a-form-item
+          label="调整岗位工资"
+          name="currentPostWage"
+        >
+          <div class="flex items-center">
+            <a-form-item-rest>
+              <a-input
+                :value="adjustSalary.currentPostWage"
+                disabled
+                style="width: 40%"
+              />
+            </a-form-item-rest>
+            <div
+              style="width: 10%;"
+              class="text-center"
+            > {{ '-->' }}</div>
+            <a-input
+              v-model:value="adjustSalaryForm.currentPostWage"
+              type="number"
+              style="width: 40%;"
+              placeholder="调整后岗位工资"
+            />
+          </div>
+        </a-form-item>
+        <a-form-item label="工资合计">
+          <div class="flex items-center">
+            <a-input
+              :value="summation.currentTotal"
+              disabled
+              style="width: 40%"
+            />
+            <div
+              style="width: 10%;"
+              class="text-center"
+            > {{ '-->' }}</div>
+            <a-input
+              :value="summation.afterTotal"
+              type="number"
+              style="width: 40%;"
+              disabled
+              placeholder="工资合计"
+            />
+          </div>
+        </a-form-item>
+        <a-form-item label="调整幅度">
+          <a-input
+            :value="summation.adjustRange"
+            style="width: 90%;"
+            disabled
+          />
+        </a-form-item>
+      </a-form>
+    </a-modal>
+
+    <!-- 工资设置 -->
+    <SalarySetting
+      v-if="resetSalary"
+      v-model:open="salarySettingOpen"
+      @cancel="cancel"
+    />
+  </div>
 </template>
 
 <style lang="less" scoped>

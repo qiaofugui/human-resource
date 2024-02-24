@@ -148,149 +148,151 @@ const deleteDepartment = async (id) => {
 </script>
 
 <template>
-  <div class="bg-white p-5">
-    <a-spin :spinning="spinning">
-      <a-tree
-        :autoExpandParent="true"
-        :tree-data="treeData"
-        block-node
-        :field-names="fieldNames"
-        :defaultExpandAll="true"
-        v-if="treeData.length"
-      >
-        <template #title="{ id: treeKey, name, managerName, code, introduce, managerId, pid, createTime }">
-          <a-dropdown :trigger="['contextmenu']">
-            <div class="flex justify-between items-center">
-              <div class="mr-2">{{ name }}</div>
-              <div class="flex items-center text-sm">
-                <div class="mr-2">{{ managerName }}</div>
-                <a-popover
-                  trigger="hover"
-                  placement="bottom"
-                >
-                  <template #content>
-                    <div class="popover flex flex-col">
-                      <a-button
-                        type="text"
-                        class="item"
-                        @click="departmentHandle('add', { name, code, managerId, introduce, pid })"
-                      >添加子部门</a-button>
-                      <a-button
-                        type="text"
-                        class="item"
-                        @click="departmentHandle('update', { name, code, managerId, introduce, pid, createTime, id: treeKey })"
-                      >编辑部门</a-button>
-                      <a-popconfirm
-                        placement="left"
-                        ok-text="删除"
-                        cancel-text="取消"
-                        @confirm="departmentHandle('delete', { name, code, managerId, introduce, pid, id: treeKey })"
-                      >
-                        <template #title>
-                          <div>确定要删除 <span class="font-bold">{{ name }}</span> 吗?</div>
-                        </template>
+  <div>
+    <div class="bg-white p-5">
+      <a-spin :spinning="spinning">
+        <a-tree
+          :autoExpandParent="true"
+          :tree-data="treeData"
+          block-node
+          :field-names="fieldNames"
+          :defaultExpandAll="true"
+          v-if="treeData.length"
+        >
+          <template #title="{ id: treeKey, name, managerName, code, introduce, managerId, pid, createTime }">
+            <a-dropdown :trigger="['contextmenu']">
+              <div class="flex justify-between items-center">
+                <div class="mr-2">{{ name }}</div>
+                <div class="flex items-center text-sm">
+                  <div class="mr-2">{{ managerName }}</div>
+                  <a-popover
+                    trigger="hover"
+                    placement="bottom"
+                  >
+                    <template #content>
+                      <div class="popover flex flex-col">
                         <a-button
                           type="text"
                           class="item"
-                        >删除</a-button>
-                      </a-popconfirm>
-                    </div>
-                  </template>
-                  <a-button type="link">操作
-                    <DownOutlined class="text-xs" />
-                  </a-button>
-                </a-popover>
+                          @click="departmentHandle('add', { name, code, managerId, introduce, pid })"
+                        >添加子部门</a-button>
+                        <a-button
+                          type="text"
+                          class="item"
+                          @click="departmentHandle('update', { name, code, managerId, introduce, pid, createTime, id: treeKey })"
+                        >编辑部门</a-button>
+                        <a-popconfirm
+                          placement="left"
+                          ok-text="删除"
+                          cancel-text="取消"
+                          @confirm="departmentHandle('delete', { name, code, managerId, introduce, pid, id: treeKey })"
+                        >
+                          <template #title>
+                            <div>确定要删除 <span class="font-bold">{{ name }}</span> 吗?</div>
+                          </template>
+                          <a-button
+                            type="text"
+                            class="item"
+                          >删除</a-button>
+                        </a-popconfirm>
+                      </div>
+                    </template>
+                    <a-button type="link">操作
+                      <DownOutlined class="text-xs" />
+                    </a-button>
+                  </a-popover>
+                </div>
               </div>
-            </div>
-            <template #overlay>
-              <a-menu>
-                <a-menu-item
-                  class="text-center"
-                  key="add"
-                  @click="departmentHandle('add', { name, code, managerId, introduce, pid, createTime })"
-                >添加子部门</a-menu-item>
-                <a-menu-item
-                  class="text-center"
-                  key="update"
-                  @click="departmentHandle('update', { name, code, managerId, introduce, pid, createTime, id: treeKey })"
-                >编辑部门</a-menu-item>
-                <a-menu-item
-                  class="text-center"
-                  key="delete"
-                  @click="departmentHandle('delete', { name, code, managerId, introduce, pid, id: treeKey })"
-                >删除</a-menu-item>
-              </a-menu>
-            </template>
-          </a-dropdown>
-        </template>
-      </a-tree>
-    </a-spin>
-  </div>
+              <template #overlay>
+                <a-menu>
+                  <a-menu-item
+                    class="text-center"
+                    key="add"
+                    @click="departmentHandle('add', { name, code, managerId, introduce, pid, createTime })"
+                  >添加子部门</a-menu-item>
+                  <a-menu-item
+                    class="text-center"
+                    key="update"
+                    @click="departmentHandle('update', { name, code, managerId, introduce, pid, createTime, id: treeKey })"
+                  >编辑部门</a-menu-item>
+                  <a-menu-item
+                    class="text-center"
+                    key="delete"
+                    @click="departmentHandle('delete', { name, code, managerId, introduce, pid, id: treeKey })"
+                  >删除</a-menu-item>
+                </a-menu>
+              </template>
+            </a-dropdown>
+          </template>
+        </a-tree>
+      </a-spin>
+    </div>
 
-  <a-modal
-    v-model:open="open"
-    :title="type === 'add' ? '添加部门' : '编辑部门'"
-    @ok="ok(type, formState)"
-    @cancel="formRef.resetFields()"
-    :destroyOnClose="true"
-    :confirm-loading="modalLoading"
-  >
-    <a-form
-      ref="formRef"
-      :model="formState"
-      :rules="rules"
-      :label-col="{ style: { width: '100px' } }"
+    <a-modal
+      v-model:open="open"
+      :title="type === 'add' ? '添加部门' : '编辑部门'"
+      @ok="ok(type, formState)"
+      @cancel="formRef.resetFields()"
+      :destroyOnClose="true"
+      :confirm-loading="modalLoading"
     >
-      <a-form-item
-        label="部门名称"
-        name="name"
-        has-feedback
+      <a-form
+        ref="formRef"
+        :model="formState"
+        :rules="rules"
+        :label-col="{ style: { width: '100px' } }"
       >
-        <a-input
-          v-model:value="formState.name"
-          placeholder="请输入2-10个字符"
-        />
-      </a-form-item>
-      <a-form-item
-        label="部门编码"
-        name="code"
-        has-feedback
-      >
-        <a-input
-          v-model:value="formState.code"
-          placeholder="请输入2-10个字符"
-        />
-      </a-form-item>
-      <a-form-item
-        label="部门负责人"
-        name="managerId"
-        has-feedback
-      >
-        <a-select
-          v-model:value="formState.managerId"
-          placeholder="请选择负责人"
+        <a-form-item
+          label="部门名称"
+          name="name"
+          has-feedback
         >
-          <a-select-option
-            :value="item.id"
-            v-for="item in departmentLeaderList"
-          >{{ item.username }}</a-select-option>
-        </a-select>
-      </a-form-item>
-      <a-form-item
-        label="部门介绍"
-        name="introduce"
-        has-feedback
-      >
-        <a-textarea
-          v-model:value="formState.introduce"
-          placeholder="1-100个字符"
-          show-count
-          :maxlength="100"
-          :rows="3"
-        />
-      </a-form-item>
-    </a-form>
-  </a-modal>
+          <a-input
+            v-model:value="formState.name"
+            placeholder="请输入2-10个字符"
+          />
+        </a-form-item>
+        <a-form-item
+          label="部门编码"
+          name="code"
+          has-feedback
+        >
+          <a-input
+            v-model:value="formState.code"
+            placeholder="请输入2-10个字符"
+          />
+        </a-form-item>
+        <a-form-item
+          label="部门负责人"
+          name="managerId"
+          has-feedback
+        >
+          <a-select
+            v-model:value="formState.managerId"
+            placeholder="请选择负责人"
+          >
+            <a-select-option
+              :value="item.id"
+              v-for="item in departmentLeaderList"
+            >{{ item.username }}</a-select-option>
+          </a-select>
+        </a-form-item>
+        <a-form-item
+          label="部门介绍"
+          name="introduce"
+          has-feedback
+        >
+          <a-textarea
+            v-model:value="formState.introduce"
+            placeholder="1-100个字符"
+            show-count
+            :maxlength="100"
+            :rows="3"
+          />
+        </a-form-item>
+      </a-form>
+    </a-modal>
+  </div>
 </template>
 
 <style lang="less" scoped>
