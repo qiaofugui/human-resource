@@ -74,15 +74,15 @@ onUnmounted(() => {
 
 <template>
   <div class="screen p-6 text-gray-600">
-    <div class="mb-2 flex justify-center">
+    <div class="mb-2 flex justify-center mb-10">
       <span
         @click="openLock"
-        class="unlock text-2xl cursor-pointer"
+        class="unlock font-bold text-2xl cursor-pointer"
       >
         <LockOutlined /> 点击解锁
       </span>
     </div>
-    <div class="flex justify-between items-center">
+    <div class="flex justify-center items-center">
       <a-card class="card text-gray-600">
         {{ time?.split(':')[0] }} 时
       </a-card>
@@ -93,8 +93,8 @@ onUnmounted(() => {
         {{ time?.split(':')[2] }} 秒
       </a-card>
     </div>
-    <div class="mt-2 flex justify-center">
-      <div class="font-bold text-6xl">{{ date }} / {{ week }}</div>
+    <div class="mt-2 flex justify-center mt-10">
+      <div class="font-bold text-4xl">{{ date }} / {{ week }}</div>
     </div>
   </div>
 
@@ -148,7 +148,7 @@ onUnmounted(() => {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: center;
 }
 .lock-avatar {
   width: 80px;
@@ -160,15 +160,20 @@ onUnmounted(() => {
 }
 
 .card {
-  width: 32.4%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 32%;
   height: 70vh;
+  max-width: 500px;
+  max-height: 500px;
+  margin: 16px;
   box-shadow: 0px 0px 50px -20px rgba(98, 38, 238, 0.2);
   background-color: rgba(98, 38, 238, 0.1);
   border-radius: 20px;
-  line-height: 70vh;
-  text-align: center;
   font-size: 124px;
   font-weight: 700;
+  text-align: center;
 }
 .unlock {
   padding: 15px;
