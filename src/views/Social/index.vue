@@ -42,7 +42,7 @@ const columns = [
     title: '手机',
     dataIndex: 'mobile',
     key: 'mobile',
-    width: 120,
+    width: 130,
   },
   {
     title: '工号',
@@ -319,6 +319,7 @@ const putSocial = () => {
       title="社保详情"
       placement="right"
       width="75%"
+      :destroyOnClose="true"
     >
       <div class="top mb-6 flex">
         <div>

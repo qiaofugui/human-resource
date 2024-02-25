@@ -114,7 +114,7 @@ onUnmounted(() => {
         <a-avatar
           class="lock-avatar"
           v-else
-        >{{ user.username.charAt(0) }}</a-avatar>
+        >{{ userInfo.userInfo.username.charAt(0) }}</a-avatar>
       </div>
       <div class="text-base">{{ userInfo.userInfo.username }}</div>
     </div>
@@ -154,6 +154,9 @@ onUnmounted(() => {
   width: 80px;
   height: 80px;
   background-color: rgba(98, 38, 238, 0.1);
+  line-height: 75px;
+  font-size: 32px;
+  color: #333;
 }
 
 .card {

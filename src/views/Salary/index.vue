@@ -39,7 +39,7 @@ const columns = [
     title: '手机',
     dataIndex: 'mobile',
     key: 'mobile',
-    width: 120,
+    width: 130,
   },
   {
     title: '工号',
@@ -162,13 +162,15 @@ const adjustSalaryCancel = () => {
   adjustSalaryVisible.value = false
 }
 const adjustSalaryOk = async () => {
-  await postSalaryAdjustAPI(adjustSalary.value.userId, { ...adjustSalaryForm.value, userId: adjustSalary.value.userId })
-  message.success('调整成功!')
-  adjustSalaryVisible.value = false
-  adjustSalaryForm.value = {
-    currentBasicSalary: '',
-    currentPostWage: ''
-  }
+  adjustSalaryFormRef.value.validate().then(async () => {
+    await postSalaryAdjustAPI(adjustSalary.value.userId, { ...adjustSalaryForm.value, userId: adjustSalary.value.userId })
+    message.success('调整成功!')
+    adjustSalaryVisible.value = false
+    adjustSalaryForm.value = {
+      currentBasicSalary: '',
+      currentPostWage: ''
+    }
+  })
 }
 
 // 工资设置

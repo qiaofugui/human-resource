@@ -46,7 +46,7 @@ const listToTree = (data) => {
 const columns = [
   { title: '头像', dataIndex: 'staffPhoto', key: 'staffPhoto', width: 80 },
   { title: '姓名', dataIndex: 'username', key: 'username', width: 120 },
-  { title: '手机号', dataIndex: 'mobile', key: 'mobile', width: 120 },
+  { title: '手机号', dataIndex: 'mobile', key: 'mobile', width: 130 },
   {
     title: '工号', dataIndex: 'workNumber', key: 'workNumber', width: 120,
     sorter: (a, b) => {

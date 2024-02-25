@@ -390,5 +390,8 @@ const matched = computed(() => {
   width: 80px;
   height: 80px;
   background-color: rgba(98, 38, 238, 0.1);
+  line-height: 75px;
+  font-size: 32px;
+  color: #333;
 }
 </style>

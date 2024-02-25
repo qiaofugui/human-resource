@@ -218,6 +218,7 @@ const openDrawer = async (row) => {
       title="审批详情"
       placement="right"
       width="75%"
+      :destroyOnClose="true"
     >
       <div class="flex">
         <div class="left pr-6">

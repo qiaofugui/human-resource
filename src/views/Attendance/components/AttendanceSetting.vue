@@ -266,10 +266,10 @@ const cancel = () => {
 }
 const ok = async () => {
   if (activeKey.value === 'attendance') {
-    attendanceForm.value.afternoonStartTime = morningTime.value[0]
-    attendanceForm.value.afternoonEndTime = morningTime.value[1]
-    attendanceForm.value.morningStartTime = afternoonTime.value[0]
-    attendanceForm.value.morningEndTime = afternoonTime.value[0]
+    attendanceForm.value.afternoonStartTime = afternoonTime.value[0]
+    attendanceForm.value.afternoonEndTime = afternoonTime.value[1]
+    attendanceForm.value.morningStartTime = morningTime.value[0]
+    attendanceForm.value.morningEndTime = morningTime.value[1]
     modalLoading.value = true
     await putAttendancesByDeptAPI(attendanceForm.value)
     getAttendancesByDept()
