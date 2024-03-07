@@ -35,7 +35,7 @@ http.interceptors.response.use(
     return Promise.reject(new Error(message))
   },
   (error) => {
-    if (error.response.status === 401) {
+    if (error.response?.status === 401) {
       // 此时说明token超时了，超时和没有token是没有任何区别的
       const { removeToken } = useToken()
       const lock = useLock()
