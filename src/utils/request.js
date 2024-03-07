@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { message as Msg } from 'ant-design-vue'
 import useToken from '@/stores/token'
+import useLock from '@/stores/lock'
 import useUserInfo from '@/stores/userInfo'
 import router from '@/router'
 
@@ -37,6 +38,7 @@ http.interceptors.response.use(
     if (error.response.status === 401) {
       // 此时说明token超时了，超时和没有token是没有任何区别的
       const { removeToken } = useToken()
+      const lock = useLock()
       // 删除token
       removeToken()
       const { removeUserInfo } = useUserInfo()
@@ -49,7 +51,7 @@ http.interceptors.response.use(
       router.push('/login')
     } else {
       Msg.destroy()
-      Msg.warning(error.response.status)
+      Msg.warning(error.message)
     }
     return Promise.reject(error)
   }
