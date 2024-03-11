@@ -105,7 +105,7 @@ const rowSelection = {
 const changeSize = (page, pageSize) => {
   params.page = page
   params.pagesize = pageSize
-  onSelect()
+  onSelect('_', { node: { id: params.value.departmentId } })
 }
 
 const noticeType = [
@@ -247,22 +247,10 @@ const okRole = async () => {
     <div class="flex w-full bg-white">
       <div class="left p-2">
         <a-spin :spinning="treeSpinning">
-          <a-input-search
-            v-model:value="params.keyword"
-            placeholder="输入员工姓名搜索"
-            enter-button
-            @search="onSelect"
-            class="mb-2"
-          />
-          <a-tree
-            :autoExpandParent="true"
-            :tree-data="treeData"
-            :field-names="fieldNames"
-            :defaultExpandAll="true"
-            v-if="treeData.length"
-            block-node
-            @select="onSelect"
-          >
+          <a-input-search v-model:value="params.keyword" placeholder="输入员工姓名搜索" enter-button @search="onSelect"
+            class="mb-2" />
+          <a-tree :autoExpandParent="true" :tree-data="treeData" :field-names="fieldNames" :defaultExpandAll="true"
+            v-if="treeData.length" block-node @select="onSelect">
             <template #title="{ id: key, name, managerName, code, introduce, managerId, pid, createTime }">
               {{ name }}
             </template>
@@ -273,32 +261,16 @@ const okRole = async () => {
         <a-spin :spinning="spinning">
           <a-space class="mb-2">
             <a-button @click="openNotice">群发通知</a-button>
-            <a-button
-              type="primary"
-              @click="openModal('add')"
-            >
+            <a-button type="primary" @click="openModal('add')">
               <PlusOutlined /> 添加员工
             </a-button>
           </a-space>
-          <a-table
-            :row-selection="rowSelection"
-            :columns="columns"
-            :data-source="employeeData"
-            :scroll="{ x: 1100 }"
-            :pagination="false"
-            rowKey="id"
-          >
+          <a-table :row-selection="rowSelection" :columns="columns" :data-source="employeeData" :scroll="{ x: 1100 }"
+            :pagination="false" rowKey="id">
             <template #bodyCell="{ column, record }">
               <template v-if="column.key === 'staffPhoto'">
-                <a-avatar
-                  class="my-avatar"
-                  :src="record.staffPhoto"
-                  v-if="record.staffPhoto"
-                ></a-avatar>
-                <a-avatar
-                  class="my-avatar"
-                  v-else
-                >{{ record.username.charAt(0) }}</a-avatar>
+                <a-avatar class="my-avatar" :src="record.staffPhoto" v-if="record.staffPhoto"></a-avatar>
+                <a-avatar class="my-avatar" v-else>{{ record.username.charAt(0) }}</a-avatar>
               </template>
 
               <template v-if="column.key === 'formOfEmployment'">
@@ -307,118 +279,49 @@ const okRole = async () => {
               </template>
 
               <template v-if="column.key === 'action'">
-                <a-button
-                  type="link"
-                  size="small"
-                  @click="openModal('update', record)"
-                >编辑</a-button>
-                <a-button
-                  type="link"
-                  size="small"
-                  @click="openRole(record)"
-                >角色</a-button>
-                <a-popconfirm
-                  placement="bottom"
-                  ok-text="删除"
-                  cancel-text="取消"
-                  @confirm="deleteEmployee(record)"
-                >
+                <a-button type="link" size="small" @click="openModal('update', record)">编辑</a-button>
+                <a-button type="link" size="small" @click="openRole(record)">角色</a-button>
+                <a-popconfirm placement="bottom" ok-text="删除" cancel-text="取消" @confirm="deleteEmployee(record)">
                   <template #title>
                     <div>确定要删除 <span class="font-bold">{{ record.username }}</span> 吗?</div>
                   </template>
-                  <a-button
-                    type="link"
-                    size="small"
-                  >删除</a-button>
+                  <a-button type="link" size="small">删除</a-button>
                 </a-popconfirm>
               </template>
             </template>
           </a-table>
           <div class="flex justify-end p-2">
-            <a-pagination
-              v-model:current="params.page"
-              v-model:page-size="params.pagesize"
-              show-quick-jumper
-              :total="total"
-              :show-total="total => `共 ${total} 条`"
-              @change="changeSize"
-            />
+            <a-pagination v-model:current="params.page" v-model:page-size="params.pagesize" show-quick-jumper
+              :total="total" :show-total="total => `共 ${total} 条`" @change="changeSize" />
           </div>
         </a-spin>
       </div>
     </div>
 
     <!-- 群发通知 -->
-    <a-modal
-      v-model:open="openNoticeVisible"
-      title="群发通知"
-      @ok="sendNotice"
-      @cancel="sendFormRef.resetFields()"
-      :destroyOnClose="true"
-      :confirm-loading="noticeModalLoading"
-    >
+    <a-modal v-model:open="openNoticeVisible" title="群发通知" @ok="sendNotice" @cancel="sendFormRef.resetFields()"
+      :destroyOnClose="true" :confirm-loading="noticeModalLoading">
       <a-card class="mb-2">
-        <a-tag
-          class="mb-2"
-          :closable="checkRows.length === 1 ? false : true"
-          @close="closeTag(item.id)"
-          color="purple"
-          v-for="item in checkRows"
-          :key="item.id"
-        >@{{ item.username }}</a-tag>
+        <a-tag class="mb-2" :closable="checkRows.length === 1 ? false : true" @close="closeTag(item.id)" color="purple"
+          v-for="item in checkRows" :key="item.id">@{{ item.username }}</a-tag>
       </a-card>
-      <a-form
-        ref="sendFormRef"
-        :model="sendForm"
-        :rules="sendRules"
-      >
-        <a-form-item
-          label="消息等级"
-          name="type"
-          has-feedback
-        >
-          <a-select
-            v-model:value="sendForm.type"
-            :options="noticeType"
-          ></a-select>
+      <a-form ref="sendFormRef" :model="sendForm" :rules="sendRules">
+        <a-form-item label="消息等级" name="type" has-feedback>
+          <a-select v-model:value="sendForm.type" :options="noticeType"></a-select>
         </a-form-item>
-        <a-form-item
-          label="通知内容"
-          name="content"
-          has-feedback
-        >
-          <a-textarea
-            v-model:value="sendForm.content"
-            placeholder="请输入通知内容"
-            show-count
-            :maxlength="100"
-            :rows="3"
-          />
+        <a-form-item label="通知内容" name="content" has-feedback>
+          <a-textarea v-model:value="sendForm.content" placeholder="请输入通知内容" show-count :maxlength="100" :rows="3" />
         </a-form-item>
       </a-form>
     </a-modal>
 
-    <UserInfo
-      v-model:treeData="treeData"
-      v-model:type="type"
-      v-model:open="open"
-      v-model:formState="formState"
-      @onSelect="onSelect"
-      @cancel="cancel"
-    />
+    <UserInfo v-model:treeData="treeData" v-model:type="type" v-model:open="open" v-model:formState="formState"
+      @onSelect="onSelect" @cancel="cancel" />
 
     <!-- 角色 -->
-    <a-modal
-      v-model:open="openRoleVisible"
-      title="分配角色"
-      @ok="okRole"
-      :destroyOnClose="true"
-      :confirm-loading="roleModalLoading"
-    >
-      <a-checkbox-group
-        v-model:value="checkRoleList"
-        :options="roleList"
-      />
+    <a-modal v-model:open="openRoleVisible" title="分配角色" @ok="okRole" :destroyOnClose="true"
+      :confirm-loading="roleModalLoading">
+      <a-checkbox-group v-model:value="checkRoleList" :options="roleList" />
     </a-modal>
   </div>
 </template>
@@ -428,10 +331,12 @@ const okRole = async () => {
   width: 24%;
   border-right: 1px solid #f5f5f5;
 }
+
 .right {
   width: 76%;
   border-left: 1px solid #f5f5f5;
 }
+
 .my-avatar {
   color: #333;
   background-color: rgba(98, 38, 238, 0.1);
