@@ -1,0 +1,21 @@
+/* 自定义样式 */
+:root {
+  --vxe-ui-font-primary-color: #6226EE;
+  --vxe-ui-font-primary-darken-color: #6226EE;
+  --vxe-ui-font-primary-lighten-color: rgba(98, 38, 238, 0.8);
+  --vxe-ui-font-primary-disabled-color: rgba(98, 38, 238, 0.4);
+
+  --vxe-ui-table-row-hover-background-color: #FAFAFA;
+  --vxe-ui-table-row-current-background-color: #F7F0FF;
+  --vxe-ui-table-row-hover-current-background-color: #E1CCFF;
+}
+
+/* 按钮 */
+[class*=vxe-button] {
+  transition: all 0.2s;
+}
+
+/* 表格行 */
+[class*=vxe-body] {
+  transition: all 0.2s;
+}

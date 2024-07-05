@@ -21,13 +21,14 @@ http.interceptors.request.use(config => {
   (error) => Promise.reject(error)
 )
 
+const replaceArr = ['传智', '播客', '黑马', '教育']
 // 响应拦截器
 http.interceptors.response.use(
   (response) => {
     const { success, message, data } = response.data // axios 默认加了一层data
     if (success) {
       // 表示执行成功
-      return data
+      return JSON.parse(JSON.stringify(data).replace(new RegExp(replaceArr.join('|'), 'g'), 'QQ'))
     }
     // 提示消息
     Msg.error(message)
