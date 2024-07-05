@@ -3,41 +3,49 @@ import { getRoleAPI, postRoleAPI, deleteRoleAPI, putRoleAPI, getRolePermissionAP
 import { onMounted, watch } from 'vue'
 import { message } from 'ant-design-vue'
 
-const columns = [
-  {
-    name: 'ID',
-    dataIndex: 'id',
-    key: 'id',
-    width: 60,
-  },
-  {
-    title: '角色',
-    dataIndex: 'name',
-    key: 'name',
-    width: 200,
-  },
-  {
-    title: '状态',
-    dataIndex: 'state',
-    key: 'state',
-    width: 100,
-  },
-  {
-    title: '描述',
-    dataIndex: 'description',
-    key: 'description',
-    ellipsis: true,
-  },
-  {
-    title: '操作',
-    key: 'action',
-    width: 240,
-  },
-]
 onMounted(() => {
   getRole()
   getRolePermission()
 })
+
+const toolbarRef = ref(null)
+const tableRef = ref(null)
+onMounted(() => {
+  const $table = tableRef.value
+  const $toolbar = toolbarRef.value
+  if ($table && $toolbar) {
+    $table.connect($toolbar)
+  }
+})
+const isActiveStatus = (row) => {
+  const $table = tableRef.value
+  if ($table) {
+    return $table.isEditByRow(row)
+  }
+}
+const editRowEvent = (row) => {
+  const $table = tableRef.value
+  if ($table) {
+    $table.setEditRow(row)
+  }
+}
+const cancelRowEvent = async (row) => {
+  const $table = tableRef.value
+  if ($table) {
+    await $table.clearEdit()
+    // 还原数据
+    await $table.revertData(row)
+  }
+}
+const rowValidRules = {
+  name: [
+    { required: true, message: '角色名称不能为空' },
+  ],
+  description: [
+    { required: true, message: '角色描述不能为空' }
+  ]
+}
+
 const spinning = ref(false)
 const params = ref({
   page: 1,
@@ -100,9 +108,18 @@ const addRole = () => {
   })
 }
 const updateRole = async (row) => {
-  const res = await putRoleAPI({ ...row, state: row.state ? 1 : 0 }, row.id)
-  message.success('角色更新成功!')
-  getRole()
+  const $table = tableRef.value
+  if ($table) {
+    const errMap = await $table.validate()
+    if (errMap) {
+      message.error('请检查修改数据是否正确!')
+    } else {
+      const res = await putRoleAPI({ ...row, state: row.state ? 1 : 0 }, row.id)
+      message.success('角色更新成功!')
+      getRole()
+    }
+  }
+
 }
 
 const deleteRole = async (row) => {
@@ -117,8 +134,6 @@ const fieldNames = {
   key: 'id'
 }
 const roleTree = ref([])
-// 已拥有权限
-const roleHavePermission = ref([])
 // 获取权限列表
 const getRolePermission = async () => {
   const res = await getRolePermissionAPI()
@@ -172,97 +187,76 @@ const updateRolePermission = async () => {
   <div>
     <div class="bg-white p-2 h-full">
       <a-spin :spinning="spinning">
-        <a-button
-          type="primary"
-          @click="openAdd"
-          class="mb-2"
-        >
-          <PlusOutlined /> 添加角色
-        </a-button>
-        <a-table
-          :columns="columns"
-          :data-source="roleData"
-          :pagination="false"
-          :row-class-name="(_record, index) => (index % 2 === 1 ? 'table-striped' : null)"
-        >
-          <template #headerCell="{ column }">
-            <template v-if="column.key === 'id'">
-              ID
-            </template>
+        <vxe-toolbar ref="toolbarRef" print import export custom>
+          <template #buttons>
+            <a-button
+              type="primary"
+              @click="openAdd"
+              class="mb-2"
+            >
+              <PlusOutlined /> 添加角色
+            </a-button>
           </template>
-
-          <template #bodyCell="{ column, record }">
-            <template v-if="column.key === 'name'">
-              <div v-if="record.isEdit">
-                <a-input
-                  v-model:value="record.name"
-                  placeholder="请输入角色名称"
-                  size="small"
-                />
-              </div>
-              <div v-else>{{ record.name }}</div>
+        </vxe-toolbar>
+        <vxe-table id="roleTable" ref="tableRef" keep-source :custom-config="{ allowFixed: false, storage: true }"
+          :print-config="{}" :import-config="{}" :export-config="{}" :data="roleData"
+          :row-config="{ isHover: true, isCurrent: true }" :column-config="{ resizable: true }" :edit-config="{ trigger: 'manual', autoClear: false, mode: 'row', showStatus: true }" :edit-rules="rowValidRules">
+          <vxe-column field="id" title="ID" width="60"></vxe-column>
+          <vxe-column field="name" title="角色" width="120">
+            <template #edit="params">
+              <a-input
+                v-model:value="params.row.name"
+                placeholder="请输入角色名称"
+                size="small"
+              />
             </template>
-            <template v-else-if="column.key === 'state'">
-              <div v-if="record.isEdit">
-                <a-switch v-model:checked="record.state" />
-              </div>
-              <div v-else>{{ record.state ? '已启用' : '未启用' }}</div>
-            </template>
-            <template v-else-if="column.key === 'description'">
-              <div v-if="record.isEdit">
-                <a-input
-                  v-model:value="record.description"
-                  placeholder="请输入角色描述"
-                  show-count
-                  :maxlength="100"
-                  :rows="1"
-                  size="small"
-                />
-              </div>
-              <div v-else>{{ record.description }}</div>
-            </template>
-            <template v-else-if="column.key === 'action'">
-              <div v-if="!record.isEdit">
+          </vxe-column>
+          <vxe-column field="state" title="状态" width="80" :formatter="({ cellValue }) => cellValue ? '已启用' : '未启用'">
+          </vxe-column>
+          <vxe-column field="description" title="描述"></vxe-column>
+          <vxe-column title="操作" width="180" fixed="right" header-align="center" align="center">
+            <template #default="{ row }">
+              <template v-if="isActiveStatus(row)">
                 <a-button
                   type="link"
                   size="small"
-                  @click="openAllocation(record)"
+                  @click="updateRole(row)"
+                >完成</a-button>
+                <a-button
+                  type="link"
+                  size="small"
+                  @click="cancelRowEvent(row)"
+                >取消</a-button>
+              </template>
+              <template v-else>
+                <a-button
+                  type="link"
+                  size="small"
+                  @click="openAllocation(row)"
                 >分配权限</a-button>
                 <a-button
                   type="link"
                   size="small"
-                  @click="() => record.isEdit = true"
+                  @click="editRowEvent(row)"
                 >编辑</a-button>
                 <a-popconfirm
-                  placement="bottom"
+                  placement="bottomRight"
                   ok-text="删除"
                   cancel-text="取消"
-                  @confirm="deleteRole(record)"
+                  @confirm="deleteRole(row)"
                 >
                   <template #title>
-                    <div>确定要删除 <span class="font-bold">{{ record.name }}</span> 吗?</div>
+                    <div>确定要删除 <span class="font-bold">{{ row.name }}</span> 吗?</div>
                   </template>
                   <a-button
                     type="link"
                     size="small"
                   >删除</a-button>
                 </a-popconfirm>
-              </div>
-              <div v-else>
-                <a-button
-                  type="link"
-                  size="small"
-                  @click="updateRole(record)"
-                >完成</a-button>
-                <a-button
-                  type="link"
-                  size="small"
-                  @click="() => record.isEdit = false"
-                >取消</a-button>
-              </div>
+              </template>
             </template>
-          </template>
-        </a-table>
+          </vxe-column>
+        </vxe-table>
         <div class="flex justify-end p-2">
           <a-pagination
             v-model:current="params.page"

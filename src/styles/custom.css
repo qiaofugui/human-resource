@@ -6,8 +6,8 @@
   --vxe-ui-font-primary-disabled-color: rgba(98, 38, 238, 0.4);
 
   --vxe-ui-table-row-hover-background-color: #FAFAFA;
-  --vxe-ui-table-row-current-background-color: #F7F0FF;
-  --vxe-ui-table-row-hover-current-background-color: #E1CCFF;
+  --vxe-ui-table-row-current-background-color: rgba(224, 204, 255, 0.4);
+  --vxe-ui-table-row-hover-current-background-color: rgba(224, 204, 255, 0.6);
 }
 
 /* 按钮 */
@@ -18,4 +18,8 @@
 /* 表格行 */
 [class*=vxe-body] {
   transition: all 0.2s;
+}
+
+.vxe-table--body-wrapper .vxe-body--column {
+  vertical-align: middle;
 }
