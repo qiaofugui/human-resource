@@ -251,7 +251,7 @@ const okRole = async () => {
               </a-space>
             </template>
           </vxe-toolbar>
-          <vxe-table id="roleTable" ref="tableRef" style="max-width: 1200px" :custom-config="{ allowFixed: false, storage: true }"
+          <vxe-table id="employeeTable" ref="tableRef" style="max-width: 1200px" :custom-config="{ allowFixed: false, storage: true }"
             :print-config="{}" :import-config="{}" :export-config="{}" :data="employeeData"
             :row-config="{ isHover: true, isCurrent: true }" :column-config="{ resizable: true }">
             <vxe-column type="checkbox" fixed="left" width="60"></vxe-column>

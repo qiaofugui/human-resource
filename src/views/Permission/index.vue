@@ -3,29 +3,16 @@ import { onMounted, ref } from "vue"
 import { getPermissionAPI, postPermissionAPI, deletePermissionAPI, getPermissionByIdAPI, putPermissionAPI } from '@/api/permission'
 import { message } from 'ant-design-vue'
 
-const columns = [
-  {
-    title: '名称',
-    key: 'name',
-    dataIndex: 'name',
-  },
-  {
-    title: '标识',
-    key: 'code',
-    dataIndex: 'code',
-  },
-  {
-    title: '描述',
-    key: 'description',
-    dataIndex: 'description',
-  },
-  {
-    title: '操作',
-    key: 'action',
-    dataIndex: 'action',
-    width: 180
-  },
-]
+const toolbarRef = ref(null)
+const tableRef = ref(null)
+onMounted(() => {
+  const $table = tableRef.value
+  const $toolbar = toolbarRef.value
+  if ($table && $toolbar) {
+    $table.connect($toolbar)
+  }
+})
+
 const loading = ref(false)
 const data = ref([])
 onMounted(() => {
@@ -168,40 +155,42 @@ const cancel = () => {
 <template>
   <div>
     <div class="bg-white p-2">
-      <a-button
-        type="primary"
-        class="mb-2"
-        @click="openModal('add')"
-      >添加权限</a-button>
-      <a-table
-        :columns="columns"
-        :data-source="data"
-        :pagination="false"
-        :loading="loading"
-        rowKey="id"
-      >
-        <template #bodyCell="{ column, record }">
-
-          <template v-if="column.key === 'action'">
+      <vxe-toolbar ref="toolbarRef" print import export custom>
+        <template #buttons>
+          <a-button
+            type="primary"
+            class="mb-2"
+            @click="openModal('add')"
+          >添加权限</a-button>
+        </template>
+      </vxe-toolbar>
+      <vxe-table id="permissionTable" ref="tableRef" :loading="loading" :custom-config="{ allowFixed: false, storage: true }"
+        :print-config="{}" :import-config="{}" :export-config="{}" :data="data"
+        :row-config="{ isHover: true, isCurrent: true }" :column-config="{ resizable: true }" :tree-config="{ rowField: 'id', childrenField: 'children',  iconOpen: 'vxe-icon-minus', iconClose: 'vxe-icon-add' }">
+        <vxe-column field="name" title="名称" tree-node></vxe-column>
+        <vxe-column field="code" title="标识"></vxe-column>
+        <vxe-column field="description" title="描述"></vxe-column>
+        <vxe-column title="操作" width="180" fixed="right" header-align="center" align="center">
+          <template #default="{ row }">
             <a-button
               type="link"
               size="small"
-              @click="getPermissionById(record)"
+              @click="getPermissionById(row)"
             >编辑</a-button>
             <a-button
               type="link"
               size="small"
-              :disabled="record.type === 2"
-              @click="openModal('addSub', record)"
+              :disabled="row.type === 2"
+              @click="openModal('addSub', row)"
             >添加</a-button>
             <a-popconfirm
-              placement="bottom"
+              placement="bottomRight"
               ok-text="删除"
               cancel-text="取消"
-              @confirm="deletePermission(record)"
+              @confirm="deletePermission(row)"
             >
               <template #title>
-                <div>确定要删除 <span class="font-bold">{{ record.name }}</span> 吗?</div>
+                <div>确定要删除 <span class="font-bold">{{ row.name }}</span> 吗?</div>
               </template>
               <a-button
                 type="link"
@@ -209,8 +198,8 @@ const cancel = () => {
               >删除</a-button>
             </a-popconfirm>
           </template>
-        </template>
-      </a-table>
+        </vxe-column>
+      </vxe-table>
     </div>
 
     <!-- 添加/编辑权限 -->
