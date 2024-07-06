@@ -225,7 +225,7 @@ const okRole = async () => {
 </script>
 
 <template>
-  <div class="employee-container">
+  <div>
     <div class="flex w-full bg-white">
       <div class="left p-2">
         <a-spin :spinning="treeSpinning">
@@ -241,7 +241,7 @@ const okRole = async () => {
       </div>
       <div class="right p-2">
         <a-spin :spinning="spinning">
-          <vxe-toolbar ref="toolbarRef" print import export custom>
+          <vxe-toolbar ref="toolbarRef" print export custom>
             <template #buttons>
               <a-space class="mb-2">
                 <a-button @click="openNotice">群发通知</a-button>
@@ -252,7 +252,7 @@ const okRole = async () => {
             </template>
           </vxe-toolbar>
           <vxe-table id="employeeTable" ref="tableRef" style="max-width: 1200px" :custom-config="{ allowFixed: false, storage: true }"
-            :print-config="{}" :import-config="{}" :export-config="{}" :data="employeeData"
+            :print-config="{}" :export-config="{}" :data="employeeData"
             :row-config="{ isHover: true, isCurrent: true }" :column-config="{ resizable: true }">
             <vxe-column type="checkbox" fixed="left" width="60"></vxe-column>
             <vxe-column field="id" title="ID" fixed="left" width="60"></vxe-column>

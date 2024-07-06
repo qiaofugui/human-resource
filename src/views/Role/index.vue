@@ -2,6 +2,7 @@
 import { getRoleAPI, postRoleAPI, deleteRoleAPI, putRoleAPI, getRolePermissionAPI, getRoleHavePermissionAPI, putRolePermissionAPI } from '@/api/role'
 import { onMounted, watch } from 'vue'
 import { message } from 'ant-design-vue'
+import readFile from '@/utils/readFile'
 import * as xlsx from 'xlsx'
 
 onMounted(() => {
@@ -64,15 +65,6 @@ const importMethod = async ({ file, options  }) => {
 
   params.value.page = Math.ceil((total.value + excelData.length -1)  / params.value.pagesize)
   getRole()
-}
-const readFile = (file) => {
-  return new Promise((resolve) => {
-    let reader = new FileReader()
-    reader.onload = (ev) => {
-      resolve(ev.target?.result)
-    }
-    reader.readAsBinaryString(file)
-  })
 }
 const importRole = async (addForm) => {
   await postRoleAPI({ ...addForm, state: addForm.state ? 1 : 0 })

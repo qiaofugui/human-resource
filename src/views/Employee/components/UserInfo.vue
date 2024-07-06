@@ -70,7 +70,7 @@ const rules = {
     { validator: validatorUsername, trigger: 'change' },
   ],
   mobile: [
-    { validator: validatorMobile, trigger: 'change' },
+    { required: true, validator: validatorMobile, trigger: 'change' },
   ],
   departmentId: [
     { required: true, message: '部门不能为空', trigger: 'blur' },

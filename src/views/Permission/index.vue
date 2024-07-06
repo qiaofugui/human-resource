@@ -155,7 +155,7 @@ const cancel = () => {
 <template>
   <div>
     <div class="bg-white p-2">
-      <vxe-toolbar ref="toolbarRef" print import export custom>
+      <vxe-toolbar ref="toolbarRef" print export custom>
         <template #buttons>
           <a-button
             type="primary"
@@ -165,7 +165,7 @@ const cancel = () => {
         </template>
       </vxe-toolbar>
       <vxe-table id="permissionTable" ref="tableRef" :loading="loading" :custom-config="{ allowFixed: false, storage: true }"
-        :print-config="{}" :import-config="{}" :export-config="{}" :data="data"
+        :print-config="{}" :export-config="{}" :data="data"
         :row-config="{ isHover: true, isCurrent: true }" :column-config="{ resizable: true }" :tree-config="{ rowField: 'id', childrenField: 'children',  iconOpen: 'vxe-icon-minus', iconClose: 'vxe-icon-add' }">
         <vxe-column field="name" title="名称" tree-node></vxe-column>
         <vxe-column field="code" title="标识"></vxe-column>
