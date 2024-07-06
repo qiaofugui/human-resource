@@ -4,6 +4,25 @@ import { getSocialListAPI, getCityAPI, getSocialDetailAPI, getSocialBaseAPI, put
 import { onMounted } from 'vue'
 import { message } from 'ant-design-vue'
 
+const toolbarRef = ref(null)
+const tableRef = ref(null)
+onMounted(() => {
+  const $table = tableRef.value
+  const $toolbar = toolbarRef.value
+  if ($table && $toolbar) {
+    $table.connect($toolbar)
+  }
+})
+const sortWorkNumberMethod = ({ row }) => {
+  return row.workNumber.substr(2)
+}
+const sortDateMethod = ({ row }) => {
+  return new Date(row?.timeOfEntry || row.leaveTime).getTime()
+}
+const sortNumMethod = ({ row }) => {
+  return row?.socialSecurityBase || row.providentFundBase
+}
+
 // 级联选择框数据
 const options = ref([])
 const city = ref([])
@@ -149,6 +168,7 @@ const socialBaseColumns = [
   },
 ]
 const openDetail = async (row) => {
+  loading.value = true
   const res1 = await getSocialDetailAPI(row.id)
   const res2 = await getSocialBaseAPI(row.participatingInTheCityId)
   detail.value = {
@@ -160,6 +180,7 @@ const openDetail = async (row) => {
     }
   }
   socialBase.value = res2
+  loading.value = false
   open.value = true
 }
 const formRef = ref(null)
@@ -273,34 +294,30 @@ const putSocial = () => {
     </div>
 
     <div class="mt-4 p-2 bg-white">
-      <a-table
-        :columns="columns"
-        rowKey="id"
-        :data-source="data.rows"
-        :pagination="false"
-        :loading="loading"
-        :scroll="{ x: 1400 }"
-      >
-        <template #headerCell="{ column }">
-          <template v-if="column.key === 'id'">
-            ID
-          </template>
-        </template>
-        <template #bodyCell="{ column, record, index }">
-          <template v-if="column.key === 'id'">
-            {{ index + 1 }}
-          </template>
-          <template v-if="column.key === 'leaveTime'">
-            {{ record.leaveTime || '-' }}
-          </template>
-          <template v-if="column.key === 'action'">
+      <vxe-toolbar ref="toolbarRef" print import export custom></vxe-toolbar>
+      <vxe-table id="employeeTable" ref="tableRef" :loading="loading" :custom-config="{ allowFixed: false, storage: true }"
+        :print-config="{}" :import-config="{}" :export-config="{}" :data="data.rows"
+        :row-config="{ isHover: true, isCurrent: true }" :column-config="{ resizable: true }">
+        <vxe-column field="id" title="ID"  width="60"></vxe-column>
+        <vxe-column field="username" title="姓名"></vxe-column>
+        <vxe-column field="mobile" title="手机" width="120"></vxe-column>
+        <vxe-column field="workNumber" title="工号" :sort-by="sortWorkNumberMethod" sortable></vxe-column>
+        <vxe-column field="departmentName" title="部门"></vxe-column>
+        <vxe-column field="timeOfEntry" title="入职时间" :sort-by="sortDateMethod" sortable></vxe-column>
+        <vxe-column field="leaveTime" title="离职时间" :sort-by="sortDateMethod" sortable></vxe-column>
+        <vxe-column field="participatingInTheCity" title="社保城市"></vxe-column>
+        <vxe-column field="providentFundCity" title="公积金城市"></vxe-column>
+        <vxe-column field="socialSecurityBase" title="社保基数" :sort-by="sortNumMethod" sortable></vxe-column>
+        <vxe-column field="providentFundBase" title="公积金基数" width="120" :sort-by="sortNumMethod" sortable></vxe-column>
+        <vxe-column title="操作" width="80" fixed="right" header-align="center" align="center">
+          <template #default="{ row }">
             <a-button
               type="link"
-              @click="openDetail(record)"
+              @click="openDetail(row)"
             >详情</a-button>
           </template>
-        </template>
-      </a-table>
+        </vxe-column>
+      </vxe-table>
       <div class="flex justify-end p-2 bg-white">
         <a-pagination
           v-model:current="params.page"
