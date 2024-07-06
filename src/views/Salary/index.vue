@@ -5,6 +5,25 @@ import { message } from 'ant-design-vue'
 import { getSalaryListAPI, getSalaryAdjustDetailAPI, postSalaryAdjustAPI } from '@/api/salary'
 import SalarySetting from './components/SalarySetting.vue'
 
+const toolbarRef = ref(null)
+const tableRef = ref(null)
+onMounted(() => {
+  const $table = tableRef.value
+  const $toolbar = toolbarRef.value
+  if ($table && $toolbar) {
+    $table.connect($toolbar)
+  }
+})
+const sortWorkNumberMethod = ({ row }) => {
+  return row.workNumber.substr(2)
+}
+const sortTimeOfEntryMethod = ({ row }) => {
+  return new Date(row.timeOfEntry).getTime()
+}
+const sortNumMethod = ({ row }) => {
+  return row?.currentBasicSalary || row.subsidyName
+}
+
 // 级联选择框数据
 const options = ref([])
 const checkOptions = ref([])
@@ -23,71 +42,6 @@ const changeFilter = () => {
   getSalaryList()
 }
 
-const columns = [
-  {
-    name: '序号',
-    dataIndex: 'id',
-    key: 'id',
-    width: 60,
-  },
-  {
-    title: '姓名',
-    dataIndex: 'username',
-    key: 'username',
-  },
-  {
-    title: '手机',
-    dataIndex: 'mobile',
-    key: 'mobile',
-    width: 130,
-  },
-  {
-    title: '工号',
-    dataIndex: 'workNumber',
-    key: 'workNumber',
-    width: 120,
-    sorter: (a, b) => {
-      return a.workNumber.slice(5) - b.workNumber.slice(5)
-    }
-  },
-  {
-    title: '聘用形式',
-    dataIndex: 'formOfEmployment',
-    key: 'formOfEmployment',
-  },
-  {
-    title: '部门',
-    dataIndex: 'departmentName',
-    key: 'departmentName',
-  },
-  {
-    title: '入职时间',
-    dataIndex: 'timeOfEntry',
-    key: 'timeOfEntry',
-  },
-  {
-    title: '工资基数',
-    dataIndex: 'currentBasicSalary',
-    key: 'currentBasicSalary',
-    sorter: (a, b) => {
-      return a.currentBasicSalary - b.currentBasicSalary
-    }
-  },
-  {
-    title: '津贴方案',
-    dataIndex: 'subsidyName',
-    key: 'subsidyName',
-    sorter: (a, b) => {
-      return a.subsidyName - b.subsidyName
-    }
-  },
-  {
-    title: '操作',
-    key: 'action',
-    width: 160,
-    fixed: 'right'
-  },
-]
 const params = ref({
   page: 1,
   pagesize: 10,
@@ -234,38 +188,28 @@ const cancel = () => {
     </div>
 
     <div class="mt-4 p-2 bg-white">
-      <a-table
-        :columns="columns"
-        rowKey="id"
-        :data-source="data.rows"
-        :pagination="false"
-        :loading="loading"
-        :scroll="{ x: 1100 }"
-      >
-        <template #headerCell="{ column }">
-          <template v-if="column.key === 'id'">
-            ID
-          </template>
-        </template>
-        <template #bodyCell="{ column, record, index }">
-          <template v-if="column.key === 'id'">
-            {{ index + 1 }}
-          </template>
-          <template v-if="column.key === 'formOfEmployment'">
-            {{ record.formOfEmployment == 1 ? '正式' : '非正式' }}
-          </template>
-          <template v-if="column.key === 'action'">
-            <!-- <a-button
-            type="link"
-            @click=""
-          >详情</a-button> -->
+      <vxe-toolbar ref="toolbarRef" print import export custom></vxe-toolbar>
+      <vxe-table id="employeeTable" ref="tableRef" :loading="loading" :custom-config="{ allowFixed: false, storage: true }"
+        :print-config="{}" :import-config="{}" :export-config="{}" :data="data.rows"
+        :row-config="{ isHover: true, isCurrent: true }" :column-config="{ resizable: true }">
+        <vxe-column field="id" title="ID"  width="60"></vxe-column>
+        <vxe-column field="username" title="姓名"></vxe-column>
+        <vxe-column field="mobile" title="手机"></vxe-column>
+        <vxe-column field="workNumber" title="工号" :sort-by="sortWorkNumberMethod" sortable></vxe-column>
+        <vxe-column field="formOfEmployment" title="聘用形式" :formatter="({ cellValue }) => cellValue === 1 ? '正式' : '非正式'"></vxe-column>
+        <vxe-column field="departmentName" title="部门"></vxe-column>
+        <vxe-column field="timeOfEntry" title="入职时间" :sort-by="sortTimeOfEntryMethod" sortable></vxe-column>
+        <vxe-column field="currentBasicSalary" title="工资基数" :sort-by="sortNumMethod" sortable></vxe-column>
+        <vxe-column field="subsidyName" title="津贴方案" :sort-by="sortNumMethod" sortable></vxe-column>
+        <vxe-column title="操作" width="80" fixed="right" header-align="center" align="center">
+          <template #default="{ row }">
             <a-button
               type="link"
-              @click="getSalaryAdjustDetail(record)"
+              @click="getSalaryAdjustDetail(row)"
             >调薪</a-button>
           </template>
-        </template>
-      </a-table>
+        </vxe-column>
+      </vxe-table>
       <div class="flex justify-end p-2 bg-white">
         <a-pagination
           v-model:current="params.page"

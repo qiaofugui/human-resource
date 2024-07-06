@@ -151,7 +151,7 @@ const openDrawer = async (row) => {
             >{{ processState(row.processState) }}</a-tag>
           </template>
         </vxe-column>
-        <vxe-column title="操作" width="180" fixed="right" header-align="center" align="center">
+        <vxe-column title="操作" width="80" fixed="right" header-align="center" align="center">
           <template #default="{ row }">
             <a-button
               type="link"

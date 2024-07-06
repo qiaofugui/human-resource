@@ -25,6 +25,16 @@
   transition: all 0.2s;
 }
 
+/* 表格排序 */
+[class*=vxe-sort] {
+  transition: all 0.2s;
+}
+
+/* 表格筛选 */
+[class*=vxe-filter] {
+  transition: all 0.2s;
+}
+
 .vxe-table--body-wrapper .vxe-body--column {
   vertical-align: middle;
 }
