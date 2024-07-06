@@ -2,85 +2,34 @@
 import { getApprovalDataAPI, getApprovalDetailAPI, getApprovalTaskAPI } from '@/api/approval'
 import { onMounted, ref } from 'vue'
 
-const columns = [
-  {
-    name: 'ID',
-    dataIndex: 'processId',
-    key: 'processId',
-    width: 60,
-  },
-  {
-    title: '审批类型',
-    dataIndex: 'processName',
-    key: 'processName',
-    filters: [
-      {
-        text: '请假',
-        value: '请假',
-      },
-      {
-        text: '加班',
-        value: '加班',
-      },
-      {
-        text: '离职',
-        value: '离职',
-      },
-    ],
-    onFilter: (value, record) => {
-      return record.processName.indexOf(value) === 0
-    },
-  },
-  {
-    title: '申请人',
-    dataIndex: 'username',
-    key: 'username',
-  },
-  {
-    title: '当前审批人',
-    dataIndex: 'procCurrNodeUserName',
-    key: 'procCurrNodeUserName',
-  },
-  {
-    title: '审批时间',
-    dataIndex: 'procApplyTime',
-    key: 'procApplyTime',
-  },
-  {
-    title: '审批状态',
-    dataIndex: 'processState',
-    key: 'processState',
-    filters: [
-      {
-        text: '已提交',
-        value: '0',
-      },
-      {
-        text: '审批中',
-        value: '1',
-      },
-      {
-        text: '审批通过',
-        value: '2',
-      },
-      {
-        text: '审批驳回',
-        value: '3',
-      },
-      {
-        text: '撤销',
-        value: '4',
-      },
-    ],
-    onFilter: (value, record) => {
-      return record.processState == value
-    },
-  },
-  {
-    title: '操作',
-    key: 'action',
-  },
-]
+const toolbarRef = ref(null)
+const tableRef = ref(null)
+onMounted(() => {
+  const $table = tableRef.value
+  const $toolbar = toolbarRef.value
+  if ($table && $toolbar) {
+    $table.connect($toolbar)
+  }
+})
+const processNameOptions = ref([
+  { label: '请假', value: '请假', checked: false },
+  { label: '加班', value: '加班', checked: false },
+  { label: '离职', value: '离职', checked: false }
+])
+const filterProcessNameMethod = ({ value, row }) => {
+  return row.processName === value
+}
+const processStateOptions = ref([
+  { label: '已提交', value: 0, checked: false },
+  { label: '审批中', value: 1, checked: false },
+  { label: '审批通过', value: 2, checked: false },
+  { label: '审批驳回', value: 3, checked: false },
+  { label: '撤销', value: 4, checked: false }
+])
+const filterProcessStateMethod = ({ value, row }) => {
+  return row.processState === value
+}
+
 const data = ref([])
 const loading = ref(false)
 onMounted(() => {
@@ -129,8 +78,10 @@ const getApprovalTask = async (row) => {
   task.value = res
 }
 const openDrawer = async (row) => {
+  loading.value = true
   await getApprovalDetail(row)
   await getApprovalTask(row)
+  loading.value = false
   open.value = true
 }
   ;
@@ -171,45 +122,44 @@ const openDrawer = async (row) => {
     </div>
 
     <div class="bg-white p-2 mt-4">
-      <a-table
-        :columns="columns"
-        rowKey="id"
-        :data-source="data.rows"
-        :pagination="false"
-        :loading="loading"
-      >
-        <template #headerCell="{ column }">
-          <template v-if="column.key === 'processId'">
-            ID
-          </template>
-        </template>
-        <template #bodyCell="{ column, record }">
-          <template v-if="column.key === 'processState'">
+      <vxe-toolbar ref="toolbarRef" print import export custom></vxe-toolbar>
+      <vxe-table id="employeeTable" ref="tableRef" :loading="loading" :custom-config="{ allowFixed: false, storage: true }"
+        :print-config="{}" :import-config="{}" :export-config="{}" :data="data.rows"
+        :row-config="{ isHover: true, isCurrent: true }" :column-config="{ resizable: true }">
+        <vxe-column field="processId" title="ID"  width="60"></vxe-column>
+        <vxe-column field="processName" title="审批类型" :filters="processNameOptions" :filter-method="filterProcessNameMethod"></vxe-column>
+        <vxe-column field="username" title="申请人"></vxe-column>
+        <vxe-column field="procCurrNodeUserName" title="当前审批人"></vxe-column>
+        <vxe-column field="procApplyTime" title="审批时间"></vxe-column>
+        <vxe-column field="processState" title="审批状态" :filters="processStateOptions" :filter-method="filterProcessStateMethod">
+          <template #default="{ row }">
             <a-tag
               color="yellow"
-              v-if="record.processState == 0"
-            >{{ processState(record.processState) }}</a-tag>
+              v-if="row.processState == 0"
+            >{{ processState(row.processState) }}</a-tag>
             <a-tag
               color="purple"
-              v-if="record.processState == 1"
-            >{{ processState(record.processState) }}</a-tag>
+              v-if="row.processState == 1"
+            >{{ processState(row.processState) }}</a-tag>
             <a-tag
               color="green"
-              v-else-if="record.processState == 2"
-            >{{ processState(record.processState) }}</a-tag>
+              v-else-if="row.processState == 2"
+            >{{ processState(row.processState) }}</a-tag>
             <a-tag
               color="red"
-              v-else-if="record.processState == 3 || record.processState == 4"
-            >{{ processState(record.processState) }}</a-tag>
+              v-else-if="row.processState == 3 || row.processState == 4"
+            >{{ processState(row.processState) }}</a-tag>
           </template>
-          <template v-if="column.key === 'action'">
+        </vxe-column>
+        <vxe-column title="操作" width="180" fixed="right" header-align="center" align="center">
+          <template #default="{ row }">
             <a-button
               type="link"
-              @click="openDrawer(record)"
+              @click="openDrawer(row)"
             >详情</a-button>
           </template>
-        </template>
-      </a-table>
+        </vxe-column>
+      </vxe-table>
     </div>
 
     <!-- 详情抽屉 -->
