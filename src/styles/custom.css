@@ -15,11 +15,20 @@
   transition: all 0.2s;
 }
 
+/* 复选框 */
+[class*=vxe-checkbox] {
+  transition: all 0.2s;
+}
+
 /* 表格行 */
 [class*=vxe-body] {
   transition: all 0.2s;
 }
 
 .vxe-table--body-wrapper .vxe-body--column {
+  vertical-align: middle;
+}
+
+.vxe-table--header-wrapper .vxe-header--column {
   vertical-align: middle;
 }

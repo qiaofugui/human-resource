@@ -1,7 +1,6 @@
 <script setup>
 import { getDepartmentAPI } from '@/api/department'
 import { getEmployeeAPI, sendNoticeAPI, deleteEmployeeAPI, getEmployeeInfoAPI, getRoleAPI, putRoleAPI } from '@/api/employee'
-import { getUserBaseInfoAPI } from '@/api/login'
 import { onMounted, ref } from 'vue'
 import { message } from 'ant-design-vue'
 import UserInfo from './components/UserInfo.vue'
@@ -43,33 +42,16 @@ const listToTree = (data) => {
   return tree
 }
 
-const columns = [
-  { title: '头像', dataIndex: 'staffPhoto', key: 'staffPhoto', width: 80 },
-  { title: '姓名', dataIndex: 'username', key: 'username', width: 120 },
-  { title: '手机号', dataIndex: 'mobile', key: 'mobile', width: 130 },
-  {
-    title: '工号', dataIndex: 'workNumber', key: 'workNumber', width: 120,
-    sorter: (a, b) => {
-      return a.workNumber.slice(5) - b.workNumber.slice(5)
-    }
-  },
-  { title: '聘用形式', dataIndex: 'formOfEmployment', key: 'formOfEmployment', width: 120 },
-  { title: '部门', dataIndex: 'departmentName', key: 'departmentName' },
-  {
-    title: '入职时间', dataIndex: 'timeOfEntry', key: 'timeOfEntry', width: 120,
-    sorter: (a, b) => {
-      const a1 = a.timeOfEntry.replace(/-/g, '')
-      const b1 = b.timeOfEntry.replace(/-/g, '')
-      return a1 - b1
-    }
-  },
-  {
-    title: '操作',
-    key: 'action',
-    width: 166,
-    fixed: 'right'
-  },
-];
+const toolbarRef = ref(null)
+const tableRef = ref(null)
+onMounted(() => {
+  const $table = tableRef.value
+  const $toolbar = toolbarRef.value
+  if ($table && $toolbar) {
+    $table.connect($toolbar)
+  }
+})
+
 const params = ref({
   keyword: '',
   page: 1,
@@ -96,16 +78,16 @@ const onSelect = async (selectedKeys, e) => {
     spinning.value = false
   }
 }
-const checkRows = ref([])
-const rowSelection = {
-  onChange: (selectedRowKeys, selectedRows) => {
-    checkRows.value = selectedRows
-  },
-}
 const changeSize = (page, pageSize) => {
-  params.page = page
-  params.pagesize = pageSize
+  params.value.page = page
+  params.value.pagesize = pageSize
   onSelect('_', { node: { id: params.value.departmentId } })
+}
+const sortWorkNumberMethod = ({ row }) => {
+  return row.workNumber.substr(2)
+}
+const sortTimeOfEntryMethod = ({ row }) => {
+  return new Date(row.timeOfEntry).getTime()
 }
 
 const noticeType = [
@@ -118,7 +100,7 @@ const openNoticeVisible = ref(false)
 const noticeModalLoading = ref(false)
 const sendFormRef = ref(null)
 const openNotice = () => {
-  if (checkRows.value.length === 0) {
+  if (tableRef?.value.getCheckboxRecords().length === 0) {
     return message.warning('请先选择通知员工!')
   }
   openNoticeVisible.value = true
@@ -137,12 +119,12 @@ const sendRules = {
   ]
 }
 const closeTag = (id) => {
-  checkRows.value = checkRows.value.filter(item => item.id !== id)
+  tableRef?.value.setCheckboxRow(employeeData.value.filter(row => row.id === id))
 }
 const sendNotice = () => {
   sendFormRef.value.validate().then(async () => {
     noticeModalLoading.value = true
-    const res = await sendNoticeAPI({ ...sendForm.value, userIds: checkRows.value.map(item => item.id) })
+    const res = await sendNoticeAPI({ ...sendForm.value, userIds: tableRef?.value.getCheckboxRecords().map(item => item.id) })
     message.success('通知发送成功!')
     sendFormRef.value.resetFields()
     noticeModalLoading.value = false
@@ -259,37 +241,46 @@ const okRole = async () => {
       </div>
       <div class="right p-2">
         <a-spin :spinning="spinning">
-          <a-space class="mb-2">
-            <a-button @click="openNotice">群发通知</a-button>
-            <a-button type="primary" @click="openModal('add')">
-              <PlusOutlined /> 添加员工
-            </a-button>
-          </a-space>
-          <a-table :row-selection="rowSelection" :columns="columns" :data-source="employeeData" :scroll="{ x: 1100 }"
-            :pagination="false" rowKey="id">
-            <template #bodyCell="{ column, record }">
-              <template v-if="column.key === 'staffPhoto'">
-                <a-avatar class="my-avatar" :src="record.staffPhoto" v-if="record.staffPhoto"></a-avatar>
-                <a-avatar class="my-avatar" v-else>{{ record.username.charAt(0) }}</a-avatar>
+          <vxe-toolbar ref="toolbarRef" print import export custom>
+            <template #buttons>
+              <a-space class="mb-2">
+                <a-button @click="openNotice">群发通知</a-button>
+                <a-button type="primary" @click="openModal('add')">
+                  <PlusOutlined /> 添加员工
+                </a-button>
+              </a-space>
+            </template>
+          </vxe-toolbar>
+          <vxe-table id="roleTable" ref="tableRef" style="max-width: 1200px" :custom-config="{ allowFixed: false, storage: true }"
+            :print-config="{}" :import-config="{}" :export-config="{}" :data="employeeData"
+            :row-config="{ isHover: true, isCurrent: true }" :column-config="{ resizable: true }">
+            <vxe-column type="checkbox" fixed="left" width="60"></vxe-column>
+            <vxe-column field="id" title="ID" fixed="left" width="60"></vxe-column>
+            <vxe-column field="staffPhoto" fixed="left" title="头像" width="60">
+              <template #default="{ row }">
+                <a-avatar class="my-avatar" :src="row.staffPhoto" v-if="row.staffPhoto"></a-avatar>
+                <a-avatar class="my-avatar" v-else>{{ row.username.charAt(0) }}</a-avatar>
               </template>
-
-              <template v-if="column.key === 'formOfEmployment'">
-                <span v-if="record.formOfEmployment === 1">正式</span>
-                <span v-else="record.formOfEmployment === 2">非正式</span>
-              </template>
-
-              <template v-if="column.key === 'action'">
-                <a-button type="link" size="small" @click="openModal('update', record)">编辑</a-button>
-                <a-button type="link" size="small" @click="openRole(record)">角色</a-button>
-                <a-popconfirm placement="bottom" ok-text="删除" cancel-text="取消" @confirm="deleteEmployee(record)">
+            </vxe-column>
+            <vxe-column field="username" title="姓名" fixed="left" width="120"></vxe-column>
+            <vxe-column field="mobile" title="手机号" width="130"></vxe-column>
+            <vxe-column field="workNumber" title="工号" width="120" :sort-by="sortWorkNumberMethod" sortable></vxe-column>
+            <vxe-column field="formOfEmployment" title="聘用形式" :formatter="({ cellValue }) => cellValue === 1 ? '正式' : '非正式'" width="120"></vxe-column>
+            <vxe-column field="departmentName" title="部门" width="120"></vxe-column>
+            <vxe-column field="timeOfEntry" title="入职时间" width="120" :sort-by="sortTimeOfEntryMethod" sortable></vxe-column>
+            <vxe-column title="操作" width="180" fixed="right" header-align="center" align="center">
+              <template #default="{ row }">
+                <a-button type="link" size="small" @click="openModal('update', row)">编辑</a-button>
+                <a-button type="link" size="small" @click="openRole(row)">角色</a-button>
+                <a-popconfirm placement="bottomRight" ok-text="删除" cancel-text="取消" @confirm="deleteEmployee(row)">
                   <template #title>
-                    <div>确定要删除 <span class="font-bold">{{ record.username }}</span> 吗?</div>
+                    <div>确定要删除 <span class="font-bold">{{ row.username }}</span> 吗?</div>
                   </template>
                   <a-button type="link" size="small">删除</a-button>
                 </a-popconfirm>
               </template>
-            </template>
-          </a-table>
+            </vxe-column>
+          </vxe-table>
           <div class="flex justify-end p-2">
             <a-pagination v-model:current="params.page" v-model:page-size="params.pagesize" show-quick-jumper
               :total="total" :show-total="total => `共 ${total} 条`" @change="changeSize" />
@@ -302,8 +293,8 @@ const okRole = async () => {
     <a-modal v-model:open="openNoticeVisible" title="群发通知" @ok="sendNotice" @cancel="sendFormRef.resetFields()"
       :destroyOnClose="true" :confirm-loading="noticeModalLoading">
       <a-card class="mb-2">
-        <a-tag class="mb-2" :closable="checkRows.length === 1 ? false : true" @close="closeTag(item.id)" color="purple"
-          v-for="item in checkRows" :key="item.id">@{{ item.username }}</a-tag>
+        <a-tag class="mb-2" :closable="tableRef?.getCheckboxRecords()?.length === 1 ? false : true" @close="closeTag(item.id)" color="purple"
+          v-for="item in tableRef?.getCheckboxRecords()" :key="item.id">@{{ item.username }}</a-tag>
       </a-card>
       <a-form ref="sendFormRef" :model="sendForm" :rules="sendRules">
         <a-form-item label="消息等级" name="type" has-feedback>

@@ -47,6 +47,8 @@ export default defineConfig({
     }
   },
   server: {
+    // 端口
+    port: 3000,
     // TODO 上线问题
     // 接口不支持跨域如果要上线，需要在nginx.conf的对应配置中，增加
     // #代理后端接口
