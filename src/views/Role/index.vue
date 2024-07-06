@@ -2,6 +2,7 @@
 import { getRoleAPI, postRoleAPI, deleteRoleAPI, putRoleAPI, getRolePermissionAPI, getRoleHavePermissionAPI, putRolePermissionAPI } from '@/api/role'
 import { onMounted, watch } from 'vue'
 import { message } from 'ant-design-vue'
+import * as xlsx from 'xlsx'
 
 onMounted(() => {
   getRole()
@@ -44,6 +45,37 @@ const rowValidRules = {
   description: [
     { required: true, message: '角色描述不能为空' }
   ]
+}
+const importMethod = async ({ file, options  }) => {
+  let dataBinary = await readFile(file)
+  let workBook = xlsx.read(dataBinary, { type: "binary", cellDates: true })
+  let workSheet = workBook.Sheets[workBook.SheetNames[0]]
+  const excelData = xlsx.utils.sheet_to_json(workSheet, { header: 1 })
+
+  for (let index = 1; index < excelData.length; index++) {
+    const element = excelData[index]
+      const addForm = {
+        name: element[1],
+        state: element[2] === '已启用' ? true : false,
+        description: element[3]
+      }
+    await importRole(addForm)
+  }
+
+  params.value.page = Math.ceil((total.value + excelData.length -1)  / params.value.pagesize)
+  getRole()
+}
+const readFile = (file) => {
+  return new Promise((resolve) => {
+    let reader = new FileReader()
+    reader.onload = (ev) => {
+      resolve(ev.target?.result)
+    }
+    reader.readAsBinaryString(file)
+  })
+}
+const importRole = async (addForm) => {
+  await postRoleAPI({ ...addForm, state: addForm.state ? 1 : 0 })
 }
 
 const spinning = ref(false)
@@ -184,7 +216,7 @@ const updateRolePermission = async () => {
 </script>
 
 <template>
-  <div>
+  <div class="role-container">
     <div class="bg-white p-2 h-full">
       <a-spin :spinning="spinning">
         <vxe-toolbar ref="toolbarRef" print import export custom>
@@ -199,10 +231,10 @@ const updateRolePermission = async () => {
           </template>
         </vxe-toolbar>
         <vxe-table id="roleTable" ref="tableRef" keep-source :custom-config="{ allowFixed: false, storage: true }"
-          :print-config="{}" :import-config="{}" :export-config="{}" :data="roleData"
+          :print-config="{}" :import-config="{ types: ['csv'], remote: true, importMethod, mode: ['covering'] }" :export-config="{ types: ['csv'] }" :data="roleData"
           :row-config="{ isHover: true, isCurrent: true }" :column-config="{ resizable: true }" :edit-config="{ trigger: 'manual', autoClear: false, mode: 'row', showStatus: true }" :edit-rules="rowValidRules">
           <vxe-column field="id" title="ID" width="60"></vxe-column>
-          <vxe-column field="name" title="角色" width="120">
+          <vxe-column field="name" title="角色" width="120" :edit-render="{}">
             <template #edit="params">
               <a-input
                 v-model:value="params.row.name"
@@ -211,9 +243,20 @@ const updateRolePermission = async () => {
               />
             </template>
           </vxe-column>
-          <vxe-column field="state" title="状态" width="80" :formatter="({ cellValue }) => cellValue ? '已启用' : '未启用'">
+          <vxe-column field="state" title="状态" width="80" :formatter="({ cellValue }) => cellValue ? '已启用' : '未启用'" :edit-render="{}">
+            <template #edit="params">
+              <a-switch v-model:checked="params.row.state" size="small" />
+            </template>
           </vxe-column>
-          <vxe-column field="description" title="描述"></vxe-column>
+          <vxe-column field="description" title="描述" :edit-render="{}">
+            <template #edit="params">
+              <a-input
+                v-model:value="params.row.description"
+                placeholder="请输入描述"
+                size="small"
+              />
+            </template>
+          </vxe-column>
           <vxe-column title="操作" width="180" fixed="right" header-align="center" align="center">
             <template #default="{ row }">
               <template v-if="isActiveStatus(row)">

@@ -35,6 +35,11 @@
   transition: all 0.2s;
 }
 
+/* 隐藏角色菜单导入模式 */
+.role-container .vxe-export--panel tr:nth-child(3) {
+  display: none;
+}
+
 .vxe-table--body-wrapper .vxe-body--column {
   vertical-align: middle;
 }

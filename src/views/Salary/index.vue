@@ -188,9 +188,9 @@ const cancel = () => {
     </div>
 
     <div class="mt-4 p-2 bg-white">
-      <vxe-toolbar ref="toolbarRef" print import export custom></vxe-toolbar>
+      <vxe-toolbar ref="toolbarRef" print export custom></vxe-toolbar>
       <vxe-table id="employeeTable" ref="tableRef" :loading="loading" :custom-config="{ allowFixed: false, storage: true }"
-        :print-config="{}" :import-config="{}" :export-config="{}" :data="data.rows"
+        :print-config="{}" :export-config="{}" :data="data.rows"
         :row-config="{ isHover: true, isCurrent: true }" :column-config="{ resizable: true }">
         <vxe-column field="id" title="ID"  width="60"></vxe-column>
         <vxe-column field="username" title="姓名"></vxe-column>

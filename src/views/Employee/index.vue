@@ -225,7 +225,7 @@ const okRole = async () => {
 </script>
 
 <template>
-  <div>
+  <div class="employee-container">
     <div class="flex w-full bg-white">
       <div class="left p-2">
         <a-spin :spinning="treeSpinning">

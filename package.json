@@ -25,7 +25,8 @@
     "vue": "^3.4.15",
     "vue-router": "^4.2.5",
     "vxe-pc-ui": "^4.0.48",
-    "vxe-table": "^4.7.44"
+    "vxe-table": "^4.7.44",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.3.3",

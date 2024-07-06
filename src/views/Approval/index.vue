@@ -122,9 +122,9 @@ const openDrawer = async (row) => {
     </div>
 
     <div class="bg-white p-2 mt-4">
-      <vxe-toolbar ref="toolbarRef" print import export custom></vxe-toolbar>
+      <vxe-toolbar ref="toolbarRef" print export custom></vxe-toolbar>
       <vxe-table id="employeeTable" ref="tableRef" :loading="loading" :custom-config="{ allowFixed: false, storage: true }"
-        :print-config="{}" :import-config="{}" :export-config="{}" :data="data.rows"
+        :print-config="{}" :export-config="{}" :data="data.rows"
         :row-config="{ isHover: true, isCurrent: true }" :column-config="{ resizable: true }">
         <vxe-column field="processId" title="ID"  width="60"></vxe-column>
         <vxe-column field="processName" title="审批类型" :filters="processNameOptions" :filter-method="filterProcessNameMethod"></vxe-column>
