@@ -251,7 +251,7 @@ const okRole = async () => {
               </a-space>
             </template>
           </vxe-toolbar>
-          <vxe-table id="employeeTable" ref="tableRef" style="max-width: 1200px" :custom-config="{ allowFixed: false, storage: true }"
+          <vxe-table id="employeeTable" ref="tableRef" :custom-config="{ allowFixed: false, storage: true }"
             :print-config="{}" :export-config="{}" :data="employeeData"
             :row-config="{ isHover: true, isCurrent: true }" :column-config="{ resizable: true }">
             <vxe-column type="checkbox" fixed="left" width="60"></vxe-column>
@@ -262,13 +262,13 @@ const okRole = async () => {
                 <a-avatar class="my-avatar" v-else>{{ row.username.charAt(0) }}</a-avatar>
               </template>
             </vxe-column>
-            <vxe-column field="username" title="姓名" fixed="left" width="120"></vxe-column>
-            <vxe-column field="mobile" title="手机号" width="130"></vxe-column>
-            <vxe-column field="workNumber" title="工号" width="120" :sort-by="sortWorkNumberMethod" sortable></vxe-column>
-            <vxe-column field="formOfEmployment" title="聘用形式" :formatter="({ cellValue }) => cellValue === 1 ? '正式' : '非正式'" width="120"></vxe-column>
-            <vxe-column field="departmentName" title="部门" width="120"></vxe-column>
-            <vxe-column field="timeOfEntry" title="入职时间" width="120" :sort-by="sortTimeOfEntryMethod" sortable></vxe-column>
-            <vxe-column title="操作" width="180" fixed="right" header-align="center" align="center">
+            <vxe-column field="username" title="姓名" fixed="left" min-width="120"></vxe-column>
+            <vxe-column field="mobile" title="手机号" min-width="130"></vxe-column>
+            <vxe-column field="workNumber" title="工号" min-width="120" :sort-by="sortWorkNumberMethod" sortable></vxe-column>
+            <vxe-column field="formOfEmployment" title="聘用形式" :formatter="({ cellValue }) => cellValue === 1 ? '正式' : '非正式'" min-width="120"></vxe-column>
+            <vxe-column field="departmentName" title="部门" min-width="120"></vxe-column>
+            <vxe-column field="timeOfEntry" title="入职时间" min-width="120" :sort-by="sortTimeOfEntryMethod" sortable></vxe-column>
+            <vxe-column title="操作" min-width="180" fixed="right" header-align="center" align="center">
               <template #default="{ row }">
                 <a-button type="link" size="small" @click="openModal('update', row)">编辑</a-button>
                 <a-button type="link" size="small" @click="openRole(row)">角色</a-button>

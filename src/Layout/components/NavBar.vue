@@ -213,7 +213,7 @@ const matched = computed(() => {
     </a-tooltip>
     <!-- 面包屑 -->
     <a-breadcrumb class="px-2">
-      <a-breadcrumb-item v-for="item in matched">
+      <a-breadcrumb-item v-for="item in matched" :key="item.path">
         <template v-if="item.path === '/'">
           <router-link to="/">
             首页
@@ -238,6 +238,7 @@ const matched = computed(() => {
     </a-tooltip>
   </div>
   <div class="flex items-center">
+    <div class="mr-4"></div>
     <div
       style="font-size: 22px;"
       class="mr-2 cursor-pointer"

@@ -16,7 +16,6 @@ const { userInfo: user } = useUserInfo()
 onMounted(() => {
   getHomeData()
   getNotice()
-  insertWeather()
 })
 const homeData = ref(null)
 const getHomeData = async () => {
@@ -31,37 +30,6 @@ const getNotice = async () => {
 }
 
 const date = ref()
-
-let timer = ref(null)
-const insertWeather = () => {
-  window.WIDGET = {
-    "CONFIG": {
-      "layout": "2",
-      "width": "",
-      "height": "",
-      "background": "2",
-      "dataColor": "434343",
-      "borderRadius": "8",
-      "key": "62627beec6a741a4abe07ccfb4168b2e"
-    }
-  }
-  const script = document.createElement('script')
-  script.src = 'https://widget.qweather.net/standard/static/js/he-standard-common.js?v=2.0'
-  document.body.appendChild(script)
-  nextTick(() => {
-    if (timer.value) {
-      clearInterval(timer.value)
-    }
-    timer.value = setTimeout(() => {
-      // document.querySelector('a[href*="qweather"]').style.display = 'none'
-      document.querySelector('#he-plugin-standard').style.width = '100%'
-      document.querySelector('#he-plugin-standard').style.height = '100%'
-    }, 1000)
-  })
-}
-onUnmounted(() => {
-  clearInterval(timer.value)
-})
 
 // 图表
 let socialRef = ref(null)
@@ -264,9 +232,35 @@ const setOption = () => {
           </a-list>
         </div>
       </a-col>
-      <a-col :span="8">
+      <a-col :span="8" style="max-height: 300px;">
         <div class="bg-white h-full p-4">
-          <div id="he-plugin-standard"></div>
+          <h1 class="text-base">帮助链接</h1>
+          <div class="links">
+            <div class="link-item">
+              <FilePdfFilled
+                class="mr-2"
+                style="color: #6226ee; font-size: 16px;"
+              />入门指南
+            </div>
+            <div class="link-item">
+              <BulbFilled
+                class="mr-2"
+                style="color: #6226ee; font-size: 16px;"
+              />在线帮助手册
+            </div>
+            <div class="link-item">
+              <AudioFilled
+                class="mr-2"
+                style="color: #6226ee; font-size: 16px;"
+              />联系技术支持
+            </div>
+            <div class="link-item">
+              <PlusCircleFilled
+                class="mr-2"
+                style="color: #6226ee; font-size: 16px;"
+              /> 添加链接
+            </div>
+          </div>
         </div>
       </a-col>
     </a-row>
@@ -411,33 +405,7 @@ const setOption = () => {
       </a-col>
       <a-col :span="8">
         <div class="bg-white h-full p-4">
-          <h1 class="text-base">帮助链接</h1>
-          <div class="links">
-            <div class="link-item">
-              <FilePdfFilled
-                class="mr-2"
-                style="color: #6226ee; font-size: 16px;"
-              />入门指南
-            </div>
-            <div class="link-item">
-              <BulbFilled
-                class="mr-2"
-                style="color: #6226ee; font-size: 16px;"
-              />在线帮助手册
-            </div>
-            <div class="link-item">
-              <AudioFilled
-                class="mr-2"
-                style="color: #6226ee; font-size: 16px;"
-              />联系技术支持
-            </div>
-            <div class="link-item">
-              <PlusCircleFilled
-                class="mr-2"
-                style="color: #6226ee; font-size: 16px;"
-              /> 添加链接
-            </div>
-          </div>
+          
         </div>
       </a-col>
     </a-row>
@@ -459,14 +427,14 @@ const setOption = () => {
   height: 236px;
 }
 .links {
-  margin-top: 30px;
+  margin-bottom: 30px;
   .link-item {
     display: flex;
     align-items: center;
     margin-top: 10px;
     padding: 0 10px;
     width: 100%;
-    line-height: 54px;
+    line-height: 52px;
     border-radius: 4px;
     font-size: 14px;
     background: #f5f6f8;
