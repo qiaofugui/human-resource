@@ -133,11 +133,10 @@ const setOption = () => {
   <div>
     <a-row
       :gutter="16"
-      style="max-height: 300px;"
+      style="max-height: 320px;"
     >
       <a-col
         :span="8"
-        style="max-height: 300px;"
       >
         <div class="bg-white h-full p-4">
           <header class="flex align-center">
@@ -207,7 +206,7 @@ const setOption = () => {
       </a-col>
       <a-col
         :span="8"
-        style="max-height: 300px; max-width: 49.3%;"
+        style="max-width: 49.3%;"
         class="bg-white"
       >
         <div class="bg-white h-full p-4 relative">
@@ -216,7 +215,7 @@ const setOption = () => {
             item-layout="horizontal"
             class="pt-10 overflow-y-auto"
           >
-            <a-list-item v-for="item in noticeData">
+            <a-list-item v-for="(item, i) in noticeData" :key="i">
               <a-list-item-meta :description="item.createTime">
                 <template #title>
                   <a
@@ -232,8 +231,8 @@ const setOption = () => {
           </a-list>
         </div>
       </a-col>
-      <a-col :span="8" style="max-height: 300px;">
-        <div class="bg-white h-full p-4">
+      <a-col :span="8">
+        <!-- <div class="bg-white h-full p-4">
           <h1 class="text-base">帮助链接</h1>
           <div class="links">
             <div class="link-item">
@@ -261,152 +260,85 @@ const setOption = () => {
               /> 添加链接
             </div>
           </div>
-        </div>
+        </div> -->
+        <a-calendar
+          v-model:value="date"
+          :fullscreen="false"
+        />
       </a-col>
     </a-row>
 
-    <a-row
-      :gutter="16"
-      style="height: 300px"
-      class="mt-3 charts"
-    >
-      <a-col
-        :span="16"
-        style="padding-right: 0px;"
-      >
-        <div class="bg-white h-full p-4">
-          <h1 class="text-base">社保申报数据</h1>
-          <div class="flex mt-6 h-full">
-            <div
-              style="flex: 4;"
-              class="h-full"
-            >
-              <div>
-                <div class="num">
-                  <a-statistic
-                    title="申报人数"
-                    :value="homeData?.socialInsurance?.declarationTotal"
-                  />
+    <a-row :gutter="16" class="mt-3">
+      <a-col :span="16">
+        <a-row :gutter="16" class="charts">
+          <a-col :span="24" style="padding-right: 0px;">
+            <div class="bg-white h-full p-4">
+              <h1 class="text-base">社保申报数据</h1>
+              <div class="flex mt-6">
+                <div style="flex: 3;">
+                  <div>
+                    <div class="num">
+                      <a-statistic title="申报人数" :value="homeData?.socialInsurance?.declarationTotal" />
+                    </div>
+                    <div>
+                      <a-row :gutter="16" class="mt-6">
+                        <a-col :span="12">
+                          <a-statistic title="待申报(人)" :value="homeData?.socialInsurance?.toDeclareTotal" />
+                        </a-col>
+                        <a-col :span="12">
+                          <a-statistic title="申报中(人)" :value="homeData?.socialInsurance?.declaringTotal" />
+                        </a-col>
+                        <a-col :span="12">
+                          <a-statistic title="已申报(人)" :value="homeData?.socialInsurance?.declaredTotal" />
+                        </a-col>
+                      </a-row>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <a-row
-                    :gutter="16"
-                    class="mt-6"
-                  >
-                    <a-col :span="12">
-                      <a-statistic
-                        title="待申报(人)"
-                        :value="homeData?.socialInsurance?.toDeclareTotal"
-                      />
-                    </a-col>
-                    <a-col :span="12">
-                      <a-statistic
-                        title="申报中(人)"
-                        :value="homeData?.socialInsurance?.declaringTotal"
-                      />
-                    </a-col>
-                    <a-col :span="12">
-                      <a-statistic
-                        title="已申报(人)"
-                        :value="homeData?.socialInsurance?.declaredTotal"
-                      />
-                    </a-col>
-                  </a-row>
+                <div style="flex: 7;">
+                  <!-- 图表 -->
+                  <div ref="socialRef" id="social" style="width: 100%; height: 320px;" />
                 </div>
               </div>
             </div>
-            <div
-              style="flex: 6;"
-              class="h-full"
-            >
-              <!-- 图表 -->
-              <div
-                ref="socialRef"
-                id="social"
-                style="width: 100%; height: 300px"
-              />
-            </div>
-          </div>
-        </div>
-      </a-col>
-      <a-col :span="8">
-        <div class="bg-white h-full p-4">
-          <a-calendar
-            v-model:value="date"
-            :fullscreen="false"
-          />
-        </div>
-      </a-col>
-    </a-row>
-
-    <a-row
-      :gutter="16"
-      style="height: 300px; margin-top: 92px;"
-      class="charts"
-    >
-      <a-col
-        :span="16"
-        style="padding-right: 0px;"
-      >
-        <div class="bg-white h-full p-4">
-          <h1 class="text-base">公积金申报数据</h1>
-          <div class="flex mt-6 h-full">
-            <div
-              style="flex: 4;"
-              class="h-full"
-            >
-              <div>
-                <div class="num">
-                  <a-statistic
-                    title="申报人数"
-                    :value="homeData?.providentFund?.declarationTotal"
-                  />
+          </a-col>
+        </a-row>
+        <a-row :gutter="16" class="mt-3 charts">
+          <a-col :span="24" style="padding-right: 0px;">
+            <div class="bg-white h-full p-4">
+              <h1 class="text-base">公积金申报数据</h1>
+              <div class="flex mt-6">
+                <div style="flex: 3;">
+                  <div>
+                    <div class="num">
+                      <a-statistic title="申报人数" :value="homeData?.providentFund?.declarationTotal" />
+                    </div>
+                    <div>
+                      <a-row :gutter="16" class="mt-6">
+                        <a-col :span="12">
+                          <a-statistic title="待申报(人)" :value="homeData?.providentFund?.toDeclareTotal" />
+                        </a-col>
+                        <a-col :span="12">
+                          <a-statistic title="申报中(人)" :value="homeData?.providentFund?.declaringTotal" />
+                        </a-col>
+                        <a-col :span="12">
+                          <a-statistic title="已申报(人)" :value="homeData?.providentFund?.declaredTotal" />
+                        </a-col>
+                      </a-row>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <a-row
-                    :gutter="16"
-                    class="mt-6"
-                  >
-                    <a-col :span="12">
-                      <a-statistic
-                        title="待申报(人)"
-                        :value="homeData?.providentFund?.toDeclareTotal"
-                      />
-                    </a-col>
-                    <a-col :span="12">
-                      <a-statistic
-                        title="申报中(人)"
-                        :value="homeData?.providentFund?.declaringTotal"
-                      />
-                    </a-col>
-                    <a-col :span="12">
-                      <a-statistic
-                        title="已申报(人)"
-                        :value="homeData?.providentFund?.declaredTotal"
-                      />
-                    </a-col>
-                  </a-row>
+                <div style="flex: 7;">
+                  <!-- 图表 -->
+                  <div ref="providentRef" id="provident" style="width: 100%; height: 320px;" />
                 </div>
               </div>
             </div>
-            <div
-              style="flex: 6;"
-              class="h-full"
-            >
-              <!-- 图表 -->
-              <div
-                ref="providentRef"
-                id="provident"
-                style="width: 100%; height: 300px"
-              />
-            </div>
-          </div>
-        </div>
+          </a-col>
+        </a-row>
       </a-col>
-      <a-col :span="8">
-        <div class="bg-white h-full p-4">
-          
-        </div>
+      <a-col :span="8" style="padding-left: 8px;" class="rounded">
+        <iframe class="h-full w-full bg-white rounded" id="iframe-weather" src="https://weather.seniverse.com/?token=f4f8f3c1-9ce7-4668-9052-9a58fbf14ee3" frameborder="0"></iframe>
       </a-col>
     </a-row>
   </div>
